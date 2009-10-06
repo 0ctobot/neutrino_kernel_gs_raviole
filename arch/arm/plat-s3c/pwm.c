@@ -1,10 +1,10 @@
-/* arch/arm/plat-s3c24xx/pwm.c
+/* arch/arm/plat-s3c/pwm.c
  *
  * Copyright (c) 2007 Ben Dooks
  * Copyright (c) 2008 Simtec Electronics
  *	Ben Dooks <ben@simtec.co.uk>, <ben-linux@fluff.org>
  *
- * S3C24XX PWM device core
+ * S3C series PWM device core
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #include <linux/pwm.h>
 
 #include <mach/irqs.h>
+#include <mach/map.h>
 
 #include <plat/devs.h>
 #include <plat/regs-timer.h>
@@ -246,6 +247,10 @@ int pwm_config(struct pwm_device *pwm, int duty_ns, int period_ns)
 
 	tcmp = duty_ns / tin_ns;
 	tcmp = tcnt - tcmp;
+	/* the pwm hw only checks the compare register after a decrement,
+	   so the pin never toggles if tcmp = tcnt */
+	if (tcmp == tcnt)
+		tcmp--;
 
 	pwm_dbg(pwm, "tin_ns=%lu, tcmp=%ld/%lu\n", tin_ns, tcmp, tcnt);
 
