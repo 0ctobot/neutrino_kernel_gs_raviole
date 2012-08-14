@@ -27,7 +27,7 @@ menuconfig V4L_PLATFORM_DRIVERS
 
 if V4L_PLATFORM_DRIVERS
 
-source "drivers/media/video/marvell-ccic/Kconfig"
+source "drivers/media/platform/marvell-ccic/Kconfig"
 
 config VIDEO_VIA_CAMERA
 	tristate "VIAFB camera controller support"
@@ -43,11 +43,11 @@ config VIDEO_VIA_CAMERA
 # Platform multimedia device configuration
 #
 
-source "drivers/media/video/davinci/Kconfig"
+source "drivers/media/platform/davinci/Kconfig"
 
-source "drivers/media/video/omap/Kconfig"
+source "drivers/media/platform/omap/Kconfig"
 
-source "drivers/media/video/blackfin/Kconfig"
+source "drivers/media/platform/blackfin/Kconfig"
 
 config VIDEO_SH_VOU
 	tristate "SuperH VOU video output driver"
@@ -212,8 +212,8 @@ config VIDEO_ATMEL_ISI
 	  This module makes the ATMEL Image Sensor Interface available
 	  as a v4l2 device.
 
-source "drivers/media/video/s5p-fimc/Kconfig"
-source "drivers/media/video/s5p-tv/Kconfig"
+source "drivers/media/platform/s5p-fimc/Kconfig"
+source "drivers/media/platform/s5p-tv/Kconfig"
 
 endif # V4L_PLATFORM_DRIVERS
 
