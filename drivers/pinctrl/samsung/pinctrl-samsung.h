@@ -26,6 +26,7 @@
 #include <linux/gpio.h>
 
 /* pinmux function number for pin as gpio output line */
+#define FUNC_INPUT	0x0
 #define FUNC_OUTPUT	0x1
 
 /**
@@ -156,13 +157,6 @@ struct samsung_pin_bank {
  * @nr_banks: number of pin banks.
  * @base: starting system wide pin number.
  * @nr_pins: number of pins supported by the controller.
- * @geint_con: offset of the ext-gpio controller registers.
- * @geint_mask: offset of the ext-gpio interrupt mask registers.
- * @geint_pend: offset of the ext-gpio interrupt pending registers.
- * @weint_con: offset of the ext-wakeup controller registers.
- * @weint_mask: offset of the ext-wakeup interrupt mask registers.
- * @weint_pend: offset of the ext-wakeup interrupt pending registers.
- * @svc: offset of the interrupt service register.
  * @eint_gpio_init: platform specific callback to setup the external gpio
  *	interrupts for the controller.
  * @eint_wkup_init: platform specific callback to setup the external wakeup
@@ -175,16 +169,6 @@ struct samsung_pin_ctrl {
 
 	u32		base;
 	u32		nr_pins;
-
-	u32		geint_con;
-	u32		geint_mask;
-	u32		geint_pend;
-
-	u32		weint_con;
-	u32		weint_mask;
-	u32		weint_pend;
-
-	u32		svc;
 
 	int		(*eint_gpio_init)(struct samsung_pinctrl_drv_data *);
 	int		(*eint_wkup_init)(struct samsung_pinctrl_drv_data *);
@@ -248,6 +232,7 @@ struct samsung_pmx_func {
 	const char		*name;
 	const char		**groups;
 	u8			num_groups;
+	u32			val;
 };
 
 /* list of all exported SoC specific data */
