@@ -2437,6 +2437,15 @@ config MEMTEST
 	  If you are unsure how to answer this question, answer N.
 
 
+config CC_WERROR
+	bool "Treat all compile warnings as errors"
+	default n
+	help
+	  Select this option to set compiler warnings as errors,
+	  to prevent easily-fixable problems from creeping into
+	  the codebase.
+
+	  If unsure, say N.
 
 config HYPERV_TESTING
 	bool "Microsoft Hyper-V driver testing"
