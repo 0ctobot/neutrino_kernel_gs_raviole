@@ -23,7 +23,6 @@
  * very different coding styles, disable automatic formatting
  */
 
-/* clang-format off */
 #define AOC_ASSERT(x)
 #define VALID_DIRECTION(d) ((d == AOC_UP) || (d == AOC_DOWN))
 
@@ -77,9 +76,9 @@ static size_t _difference_with_overflow(struct aoc_ipc_memory_region *r)
 		return tx - rx;
 	} else {
 		/*
-		 * The tx counter has overflowed the 32 bit counter, so calculate the
-		 * difference with a larger type
-		 */
+     * The tx counter has overflowed the 32 bit counter, so calculate the
+     * difference with a larger type
+     */
 		return ((tx + 0x100000000) - rx);
 	}
 }
@@ -111,14 +110,14 @@ static size_t _aoc_ring_read_buffer(const u8 *ring,
 
 	if (available > ring_size) {
 		/*
-		 * Overflow.  Reader has not kept up with the writer
-		 * Move the read pointer up to make the diff ring_size
-		 */
+     * Overflow.  Reader has not kept up with the writer
+     * Move the read pointer up to make the diff ring_size
+     */
 
 		/*
-		 * Drag the rx value up to tx - ring_size, but tx has recently
-		 * wrapped. rx will still be before the wrap value (0xffffffff)
-		 */
+     * Drag the rx value up to tx - ring_size, but tx has recently
+     * wrapped. rx will still be before the wrap value (0xffffffff)
+     */
 		if (tx < ring_size)
 			rx = (tx + 0x100000000 - ring_size);
 		else
@@ -311,18 +310,18 @@ size_t aoc_service_slots_available_to_read(aoc_service *service,
 
 	if (aoc_service_is_ring(service)) {
 		/*
-		 * Rings have one slot and the tx/rx counters specify bytes.  If the
-		 * byte counters match, there is nothing to read
-		 */
+     * Rings have one slot and the tx/rx counters specify bytes.  If the
+     * byte counters match, there is nothing to read
+     */
 		return ioread32(&region->tx) != ioread32(&region->rx) ? 1 : 0;
 	} else {
 		size_t diff = _difference_with_overflow(region);
 
 		/*
-		 * TODO : The API contract says that the difference will never be larger
-		 * than the # of slots on the channel.  Figure out what to do if this
-		 * assumption is ever false.
-		 */
+     * TODO : The API contract says that the difference will never be larger
+     * than the # of slots on the channel.  Figure out what to do if this
+     * assumption is ever false.
+     */
 		return diff > region->slots ? region->slots : diff;
 	}
 }
@@ -407,8 +406,9 @@ void *aoc_service_current_message_pointer(aoc_service *service, void *base,
 {
 	uint8_t *ptr;
 
-	if (!aoc_service_can_read_message(service, dir))
+	if (!aoc_service_can_read_message(service, dir)) {
 		return NULL;
+	}
 
 	ptr = aoc_service_current_read_pointer(service, base, dir);
 	ptr += sizeof(struct aoc_ipc_message_header);

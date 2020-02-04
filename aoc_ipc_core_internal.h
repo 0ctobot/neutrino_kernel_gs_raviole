@@ -54,7 +54,7 @@ struct aoc_control_block {
 	u32 services;
 	u32 service_size;
 	u32 services_offset;
-} __attribute__((packed));
+} __attribute__((packed, aligned(4)));
 
 struct aoc_ipc_memory_region {
 	u32 offset;
@@ -62,14 +62,21 @@ struct aoc_ipc_memory_region {
 	u32 slots;
 	u32 tx;
 	u32 rx;
-} __attribute__((packed));
+} __attribute__((packed, aligned(4)));
+
+enum REGION_COMM {
+	REGION_COMM_TX = 0,
+	REGION_COMM_RX,
+
+	REGION_COMM_TOT = 2
+};
 
 struct aoc_ipc_service_header {
 	char name[AOC_SERVICE_NAME_LENGTH];
 	u32 flags;
 
 	struct aoc_ipc_memory_region regions[2];
-} __attribute__((packed));
+} __attribute__((packed, aligned(4)));
 
 struct aoc_ipc_message_header {
 	u16 length;
@@ -89,6 +96,9 @@ size_t aoc_ring_bytes_available_to_read(aoc_service *service,
 size_t aoc_ring_bytes_available_to_write(aoc_service *service,
 					 aoc_direction dir);
 
+bool aoc_ring_flush_read_data(aoc_service *service, aoc_direction dir, size_t bytes_to_leave);
+
+void *aoc_service_current_message_pointer(aoc_service *service, void *base, aoc_direction dir);
 void *aoc_service_current_read_pointer(struct aoc_ipc_service_header *service,
 				       void *base, aoc_direction dir);
 void *aoc_service_current_write_pointer(struct aoc_ipc_service_header *service,
