@@ -40,6 +40,7 @@ extern "C" {
 #endif
 
 #define AOC_SERVICE_NAME_LENGTH 32
+#define AOC_VERSION_LENGTH 48
 
 #define AOC_SERVICE_FLAG_SYSTEM_MASK 0xffff0000
 #define AOC_SERVICE_FLAG_RING 0x00010000
@@ -54,6 +55,8 @@ struct aoc_control_block {
 	u32 services;
 	u32 service_size;
 	u32 services_offset;
+	u8 fw_version_name[AOC_VERSION_LENGTH];
+	u8 hw_version_name[AOC_VERSION_LENGTH];
 } __attribute__((packed, aligned(4)));
 
 struct aoc_ipc_memory_region {
