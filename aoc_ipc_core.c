@@ -46,6 +46,8 @@ static inline u32 ioread32(void *addr)
 	volatile u32 *r = addr;
 	return *r;
 }
+
+#define EXPORT_SYMBOL(x)
 #endif
 
 static inline void _region_advance_tx(struct aoc_ipc_memory_region *r,
@@ -192,6 +194,7 @@ size_t aoc_ring_bytes_read(aoc_service *service, aoc_direction dir)
 	region = &header->regions[dir];
 	return ioread32(&region->rx);
 }
+EXPORT_SYMBOL(aoc_ring_bytes_read);
 
 size_t aoc_ring_bytes_written(aoc_service *service, aoc_direction dir)
 {
@@ -204,6 +207,7 @@ size_t aoc_ring_bytes_written(aoc_service *service, aoc_direction dir)
 	region = &header->regions[dir];
 	return ioread32(&region->tx);
 }
+EXPORT_SYMBOL(aoc_ring_bytes_written);
 
 bool aoc_ring_did_overflow(aoc_service *service, aoc_direction dir)
 {
@@ -279,6 +283,7 @@ size_t aoc_ring_bytes_available_to_read(aoc_service *service, aoc_direction dir)
 
 	return difference > region->size ? region->size : difference;
 }
+EXPORT_SYMBOL(aoc_ring_bytes_available_to_read);
 
 size_t aoc_ring_bytes_available_to_write(aoc_service *service,
 					 aoc_direction dir)
@@ -295,6 +300,7 @@ size_t aoc_ring_bytes_available_to_write(aoc_service *service,
 
 	return region->size - aoc_ring_bytes_available_to_read(service, dir);
 }
+EXPORT_SYMBOL(aoc_ring_bytes_available_to_write);
 
 size_t aoc_service_slots_available_to_read(aoc_service *service,
 					   aoc_direction dir)
@@ -491,6 +497,7 @@ bool aoc_ring_flush_read_data(aoc_service *service, aoc_direction dir,
 	region->rx = region->tx - bytes_to_leave;
 	return true;
 }
+EXPORT_SYMBOL(aoc_ring_flush_read_data);
 
 bool aoc_service_can_read_message(aoc_service *service, aoc_direction dir)
 {
