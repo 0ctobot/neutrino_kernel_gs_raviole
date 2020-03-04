@@ -23,7 +23,9 @@
 
 #define WRITE_BARRIER() wmb()
 #elif defined(EFW)
+#include "memory_barrier.h"
 
+#define WRITE_BARRIER() MB()
 #else
 #include <stdint.h>
 
