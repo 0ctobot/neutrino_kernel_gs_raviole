@@ -59,6 +59,7 @@ struct aoc_control_block {
 	u32 services_offset;
 	u8 fw_version_name[AOC_VERSION_LENGTH];
 	u8 hw_version_name[AOC_VERSION_LENGTH];
+	u64 system_clock_offset;
 } __attribute__((packed, aligned(4)));
 
 struct aoc_ipc_memory_region {
