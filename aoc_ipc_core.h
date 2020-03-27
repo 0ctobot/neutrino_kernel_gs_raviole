@@ -191,6 +191,15 @@ size_t aoc_ring_bytes_written(aoc_service *service, aoc_direction dir);
  */
 bool aoc_ring_did_overflow(aoc_service *service, aoc_direction dir);
 
+/**
+ * Tells if notifications should be sent after writing data into the ring
+ *
+ * \param[in] service pointer to a service
+ *
+ * \return true if the receiver expects a notification after writes
+ */
+bool aoc_ring_is_push(aoc_service *service);
+
 #ifdef __cplusplus
 }
 #endif

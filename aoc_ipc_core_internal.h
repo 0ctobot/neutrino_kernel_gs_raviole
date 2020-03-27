@@ -45,7 +45,8 @@ extern "C" {
 #define AOC_VERSION_LENGTH 48
 
 #define AOC_SERVICE_FLAG_SYSTEM_MASK 0xffff0000
-#define AOC_SERVICE_FLAG_RING 0x00010000
+#define AOC_SERVICE_FLAG_RING        0x00010000
+#define AOC_SERVICE_FLAG_RING_PUSH   0x00020000
 
 #define AOC_MAGIC 0xA0C00A0C
 struct aoc_control_block {

@@ -618,3 +618,13 @@ size_t aoc_service_ring_read_offset(aoc_service *service, aoc_direction dir)
 
 	return s->regions[dir].rx % s->regions[dir].size;
 }
+
+bool aoc_ring_is_push(aoc_service *service) {
+	struct aoc_ipc_service_header *s =
+		(struct aoc_ipc_service_header *)service;
+
+	if (!service || !aoc_service_is_ring(service))
+		return false;
+
+	return (s->flags & AOC_SERVICE_FLAG_RING_PUSH) != 0;
+}
