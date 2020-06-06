@@ -51,7 +51,7 @@ extern "C" {
 #define AOC_MAGIC 0xA0C00A0C
 struct aoc_control_block {
 	u32 magic;
-	u32 fw_version;
+	u32 reserved;
 	u32 hw_version;
 	u32 status;
 	u64 supported_features;
