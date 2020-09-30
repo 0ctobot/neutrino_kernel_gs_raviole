@@ -1,5 +1,5 @@
 /*
- * drivers/media/platform/exynos/mfc/mfc_media.h
+ * drivers/media/platform/exynos/mfc/exynos_mfc_media.h
  *
  * Copyright (c) 2016 Samsung Electronics Co., Ltd.
  *		http://www.samsung.com/
@@ -10,57 +10,10 @@
  * (at your option) any later version.
  */
 
-#ifndef __MFC_MEDIA_H
-#define __MFC_MEDIA_H __FILE__
+#ifndef __EXYNOS_MFC_MEDIA_H
+#define __EXYNOS_MFC_MEDIA_H __FILE__
 
-#include <linux/videodev2.h>
-
-/*
- *	V I D E O   I M A G E   F O R M A T
- */
-/* 1 plane -- one Y, one Cb + Cr interleaved, non contiguous  */
-#define V4L2_PIX_FMT_NV12N		v4l2_fourcc('N', 'N', '1', '2')
-#define V4L2_PIX_FMT_NV12NT		v4l2_fourcc('T', 'N', '1', '2')
-
-/* 1 plane -- one Y, one Cb, one Cr, non contiguous */
-#define V4L2_PIX_FMT_YUV420N		v4l2_fourcc('Y', 'N', '1', '2')
-
-/* 1 plane -- 8bit Y, 2bit Y, 8bit Cb + Cr interleaved, 2bit Cb + Cr interleaved, non contiguous */
-#define V4L2_PIX_FMT_NV12N_10B		v4l2_fourcc('B', 'N', '1', '2')
-#define V4L2_PIX_FMT_NV12M_S10B		v4l2_fourcc('B', 'M', '1', '2')
-#define V4L2_PIX_FMT_NV21M_S10B		v4l2_fourcc('B', 'M', '2', '1')
-#define V4L2_PIX_FMT_NV16M_S10B		v4l2_fourcc('B', 'M', '1', '6')
-#define V4L2_PIX_FMT_NV61M_S10B		v4l2_fourcc('B', 'M', '6', '1')
-#define V4L2_PIX_FMT_NV12M_P010		v4l2_fourcc('P', 'M', '1', '2')
-#define V4L2_PIX_FMT_NV21M_P010		v4l2_fourcc('P', 'M', '2', '1')
-#define V4L2_PIX_FMT_NV16M_P210		v4l2_fourcc('P', 'M', '1', '6')
-#define V4L2_PIX_FMT_NV61M_P210		v4l2_fourcc('P', 'M', '6', '1')
-
-#define V4L2_PIX_FMT_NV12_P010		v4l2_fourcc('P', 'N', '1', '2')
-
-/* 12 Y/CbCr 4:2:0 SBWC */
-#define V4L2_PIX_FMT_NV12M_SBWC_8B	v4l2_fourcc('M', '1', 'S', '8')
-#define V4L2_PIX_FMT_NV12M_SBWC_10B	v4l2_fourcc('M', '1', 'S', '1')
-
-/* 21 Y/CrCb 4:2:0 SBWC */
-#define V4L2_PIX_FMT_NV21M_SBWC_8B	v4l2_fourcc('M', '2', 'S', '8')
-#define V4L2_PIX_FMT_NV21M_SBWC_10B	v4l2_fourcc('M', '2', 'S', '1')
-
-/* 12 Y/CbCr 4:2:0 SBWC single */
-#define V4L2_PIX_FMT_NV12N_SBWC_8B	v4l2_fourcc('N', '1', 'S', '8')
-#define V4L2_PIX_FMT_NV12N_SBWC_10B	v4l2_fourcc('N', '1', 'S', '1')
-
-/* 12 Y/CbCr 4:2:0 SBWC Lossy */
-#define V4L2_PIX_FMT_NV12M_SBWCL_8B	v4l2_fourcc('M', '1', 'L', '8')
-#define V4L2_PIX_FMT_NV12M_SBWCL_10B	v4l2_fourcc('M', '1', 'L', '1')
-
-/* 12 Y/CbCr 4:2:0 SBWC Lossy single */
-#define V4L2_PIX_FMT_NV12N_SBWCL_8B	v4l2_fourcc('N', '1', 'L', '8')
-#define V4L2_PIX_FMT_NV12N_SBWCL_10B	v4l2_fourcc('N', '1', 'L', '1')
-
-/* 12 Y/CbCr 4:2:0 AFBC */
-#define V4L2_PIX_FMT_NV12M_AFBC_8B     v4l2_fourcc('M', '1', 'A', '8')
-#define V4L2_PIX_FMT_NV12M_AFBC_10B    v4l2_fourcc('M', '1', 'A', '1')
+#include <linux/videodev2_exynos_media.h>
 
 /* RGB formats */
 #define V4L2_PIX_FMT_RGB32X    v4l2_fourcc('R', 'G', 'B', 'X') /* 32  RGB-8-8-8-8   */
@@ -87,6 +40,7 @@
 #define V4L2_PIX_FMT_FIMV4    v4l2_fourcc('F', 'I', 'M', '4') /* FIMV4 */
 #define V4L2_PIX_FMT_VP8      v4l2_fourcc('V', 'P', '8', '0') /* VP8 */
 #define V4L2_PIX_FMT_VP9      v4l2_fourcc('V', 'P', '9', '0') /* VP9 */
+#define V4L2_PIX_FMT_AV1      v4l2_fourcc('A', 'V', '0', '1') /* AV1 */
 #define V4L2_PIX_FMT_HEVC     v4l2_fourcc('H', 'E', 'V', 'C') /* HEVC */
 #define V4L2_PIX_FMT_BPG      v4l2_fourcc('B', 'P', 'G', '0') /* BPG */
 
@@ -99,9 +53,6 @@ enum v4l2_mpeg_mfc51_video_frame_type {
 	V4L2_MPEG_MFC51_VIDEO_FRAME_TYPE_OTHERS		= 5,
 };
 
-/*
- *	C O N T R O L S
- */
 /* new entry for enum v4l2_mpeg_video_mpeg4_level */
 #define V4L2_MPEG_VIDEO_MPEG4_LEVEL_6			8
 
@@ -126,11 +77,6 @@ enum v4l2_mpeg_mfc51_video_frame_type {
 #define V4L2_CID_MPEG_MFC51_VIDEO_FRAME_RATE_CH		\
 					V4L2_CID_MPEG_MFC51_VIDEO_H264_RC_FRAME_RATE
 
-/* CID base for Exynos controls (USER_CLASS) */
-#define V4L2_CID_EXYNOS_BASE		(V4L2_CTRL_CLASS_USER | 0x2000)
-
-/* cacheable configuration */
-#define V4L2_CID_CACHEABLE		(V4L2_CID_EXYNOS_BASE + 10)
 
 /* CID base for MFC controls (MPEG_CLASS) */
 #define V4L2_CID_MPEG_MFC_BASE		(V4L2_CTRL_CLASS_MPEG | 0x2000)
@@ -197,9 +143,15 @@ enum v4l2_mpeg_mfc51_video_frame_type {
 					(V4L2_CID_MPEG_MFC_BASE + 30)
 #define V4L2_CID_MPEG_VIDEO_DST_BUF_FLAG			\
 					(V4L2_CID_MPEG_MFC_BASE + 31)
-#define V4L2_CID_MPEG_VIDEO_FRAME_ERROR_TYPE		\
+#define V4L2_CID_MPEG_VIDEO_GDC_VOTF				\
+					(V4L2_CID_MPEG_MFC_BASE + 32)
+#define V4L2_CID_MPEG_VIDEO_FRAME_ERROR_TYPE\
 					(V4L2_CID_MPEG_MFC_BASE + 33)
 
+#define V4L2_CID_MPEG_VIDEO_CHROMA_QP_OFFSET_CB		\
+					(V4L2_CID_MPEG_MFC_BASE + 38)
+#define V4L2_CID_MPEG_VIDEO_CHROMA_QP_OFFSET_CR		\
+					(V4L2_CID_MPEG_MFC_BASE + 39)
 #define V4L2_CID_MPEG_VIDEO_GET_DISPLAY_DELAY			\
 					(V4L2_CID_MPEG_MFC_BASE + 40)
 #define V4L2_CID_MPEG_VIDEO_DROP_CONTROL			\
@@ -460,6 +412,10 @@ enum v4l2_mpeg_mfc51_video_frame_type {
 /* empty number */
 #define V4L2_CID_MPEG_VIDEO_VP9_LEVEL				\
 					(V4L2_CID_MPEG_MFC_BASE + 183)
+#define V4L2_CID_MPEG_VIDEO_UNCOMP_FMT				\
+					(V4L2_CID_MPEG_MFC_BASE + 184)
+#define V4L2_CID_MPEG_VIDEO_SKIP_LAZY_UNMAP				\
+					(V4L2_CID_MPEG_MFC_BASE + 185)
 
 /* CIDs for new common interface */
 #define V4L2_CID_MPEG_VIDEO_ROI_CONTROL				\
@@ -553,6 +509,12 @@ enum v4l2_mpeg_mfc51_video_frame_type {
 #define V4L2_CID_MPEG_VIDEO_STATIC_INFO_ENABLE			\
 					(V4L2_CID_MPEG_MFC_BASE + 232)
 
+/* CID for AV1 decoding interface */
+#define V4L2_CID_MPEG_MFC_AV1_FILM_GRAIN_USER_SHARED_HANDLE	\
+					(V4L2_CID_MPEG_MFC_BASE + 240)
+#define V4L2_CID_MPEG_MFC_AV1_FILM_GRAIN_PRESENT	\
+					(V4L2_CID_MPEG_MFC_BASE + 241)
+
 #define V4L2_CID_MPEG_VIDEO_BPG_THUMBNAIL_SIZE			\
 					(V4L2_CID_MPEG_MFC_BASE + 250)
 #define V4L2_CID_MPEG_VIDEO_BPG_EXIF_SIZE			\
@@ -560,4 +522,4 @@ enum v4l2_mpeg_mfc51_video_frame_type {
 #define V4L2_CID_MPEG_VIDEO_BPG_HEADER_SIZE			\
 					(V4L2_CID_MPEG_MFC_BASE + 252)
 
-#endif /* __MFC_MEDIA_H */
+#endif /* __EXYNOS_MFC_MEDIA_H */

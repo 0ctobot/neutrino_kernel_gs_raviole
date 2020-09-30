@@ -1,5 +1,5 @@
 /*
- * drivers/media/platform/exynos/mfc/mfc_otf.h
+ * drivers/media/platform/exynos/mfc/mfc_core_otf.h
  *
  * Copyright (c) 2016 Samsung Electronics Co., Ltd.
  *		http://www.samsung.com/
@@ -10,8 +10,8 @@
  * (at your option) any later version.
  */
 
-#ifndef __MFC_OTF_H
-#define __MFC_OTF_H __FILE__
+#ifndef __MFC_CORE_OTF_H
+#define __MFC_CORE_OTF_H __FILE__
 
 #if IS_ENABLED(CONFIG_VIDEO_EXYNOS_TSMUX)
 #include <media/exynos_tsmux.h>
@@ -21,6 +21,9 @@
 #endif
 
 #include "mfc_common.h"
+
+#define MFC_OTF_DEFAULT_SCRATCH_SIZE	81920
+#define MFC_OTF_DEFAULT_DPB_COUNT	3
 
 extern struct mfc_dev *g_mfc_dev;
 
@@ -36,6 +39,7 @@ extern int tsmux_packetize(struct packetizing_param *param);
 extern int tsmux_encoding_start(int32_t index);
 extern int tsmux_encoding_end(void);
 extern void tsmux_sfr_dump(void);
+extern void tsmux_set_es_size(unsigned int size);
 #endif
 
 enum hwfc_err {
@@ -51,16 +55,18 @@ enum hwfc_err {
 int mfc_hwfc_encode(int buf_index, int job_id, struct repeater_encoding_param *param);
 #endif
 
-int mfc_otf_create(struct mfc_ctx *ctx);
-void mfc_otf_destroy(struct mfc_ctx *ctx);
-int mfc_otf_init(struct mfc_ctx *ctx);
-void mfc_otf_deinit(struct mfc_ctx *ctx);
-int mfc_otf_ctx_ready_set_bit(struct mfc_ctx *ctx, struct mfc_bits *data);
-int mfc_otf_ctx_ready_clear_bit(struct mfc_ctx *ctx, struct mfc_bits *data);
-int mfc_otf_run_enc_init(struct mfc_ctx *ctx);
-int mfc_otf_run_enc_frame(struct mfc_ctx *ctx);
-int mfc_otf_handle_seq(struct mfc_ctx *ctx);
-int mfc_otf_handle_stream(struct mfc_ctx *ctx);
-void mfc_otf_handle_error(struct mfc_ctx *ctx, unsigned int reason, unsigned int err);
+int mfc_core_otf_create(struct mfc_ctx *ctx);
+void mfc_core_otf_destroy(struct mfc_ctx *ctx);
+int mfc_core_otf_init(struct mfc_ctx *ctx);
+void mfc_core_otf_deinit(struct mfc_ctx *ctx);
+int mfc_core_otf_ctx_ready_set_bit(struct mfc_core_ctx *core_ctx, struct mfc_bits *data);
+int mfc_core_otf_ctx_ready_clear_bit(struct mfc_core_ctx *core_ctx, struct mfc_bits *data);
+int mfc_core_otf_run_enc_init(struct mfc_core *core, struct mfc_ctx *ctx);
+int mfc_core_otf_run_enc_frame(struct mfc_core *core, struct mfc_ctx *ctx);
+int mfc_core_otf_handle_seq(struct mfc_core *core, struct mfc_ctx *ctx);
+int mfc_core_otf_handle_stream(struct mfc_core *core, struct mfc_ctx *ctx);
+void mfc_core_otf_handle_error(struct mfc_core *core, struct mfc_ctx *ctx,
+	unsigned int reason, unsigned int err);
+void mfc_core_otf_path_test(struct mfc_ctx *ctx);
 
-#endif /* __MFC_OTF_H  */
+#endif /* __MFC_CORE_OTF_H  */
