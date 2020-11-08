@@ -501,6 +501,29 @@ bool aoc_ring_flush_read_data(aoc_service *service, aoc_direction dir,
 }
 EXPORT_SYMBOL(aoc_ring_flush_read_data);
 
+/*
+ * To reset the aoc ring write ptr to the beginning of the aoc ring buffer.
+ */
+bool aoc_ring_reset_write_pointer(aoc_service *service, aoc_direction dir)
+{
+	struct aoc_ipc_memory_region *region;
+	struct aoc_ipc_service_header *s;
+	int bytes_remaining;
+
+	if (!service || !aoc_service_is_ring(service))
+		return false;
+
+	s = service;
+	region = &s->regions[dir];
+
+	bytes_remaining = region->tx % region->size;
+	if (bytes_remaining > 0)
+		region->tx += region->size - bytes_remaining;
+
+	return true;
+}
+EXPORT_SYMBOL_GPL(aoc_ring_reset_write_pointer);
+
 bool aoc_service_can_read_message(aoc_service *service, aoc_direction dir)
 {
 	return aoc_service_slots_available_to_read(service, dir) > 0;
