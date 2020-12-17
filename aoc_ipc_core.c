@@ -455,6 +455,7 @@ bool aoc_service_advance_write_index(aoc_service *service, aoc_direction dir,
 	_region_advance_tx(region, amount);
 	return true;
 }
+EXPORT_SYMBOL_GPL(aoc_service_advance_write_index);
 
 bool aoc_service_advance_read_index(aoc_service *service, aoc_direction dir,
 				    u32 amount)
@@ -478,6 +479,7 @@ bool aoc_service_advance_read_index(aoc_service *service, aoc_direction dir,
 	_region_advance_rx(region, amount);
 	return true;
 }
+EXPORT_SYMBOL_GPL(aoc_service_advance_read_index);
 
 bool aoc_ring_flush_read_data(aoc_service *service, aoc_direction dir,
 			      size_t bytes_to_leave)
