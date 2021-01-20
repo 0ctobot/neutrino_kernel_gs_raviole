@@ -104,6 +104,7 @@ size_t aoc_ring_bytes_available_to_write(aoc_service *service,
 					 aoc_direction dir);
 
 bool aoc_ring_flush_read_data(aoc_service *service, aoc_direction dir, size_t bytes_to_leave);
+bool aoc_ring_reset_write_pointer(aoc_service *service, aoc_direction dir);
 
 void *aoc_service_current_message_pointer(aoc_service *service, void *base, aoc_direction dir);
 void *aoc_service_current_read_pointer(struct aoc_ipc_service_header *service,
