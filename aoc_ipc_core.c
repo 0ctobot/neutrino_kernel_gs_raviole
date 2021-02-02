@@ -177,10 +177,31 @@ const char *aoc_service_name(aoc_service *service)
 	return header->name;
 }
 
-bool aoc_service_is_ring(aoc_service *service)
+static inline int aoc_service_type(aoc_service *service)
 {
 	struct aoc_ipc_service_header *header = service;
-	return ((header->flags & AOC_SERVICE_FLAG_RING) != 0);
+	return (header->flags & AOC_SERVICE_TYPE_MASK) >> 16;
+}
+
+bool aoc_service_is_queue(aoc_service *service)
+{
+	return aoc_service_type(service) == AOC_SERVICE_TYPE_QUEUE;
+}
+
+bool aoc_service_is_ring(aoc_service *service)
+{
+	return aoc_service_type(service) == AOC_SERVICE_TYPE_RING;
+}
+
+bool aoc_service_is_buffer(aoc_service *service)
+{
+	return aoc_service_type(service) == AOC_SERVICE_TYPE_BUFFER;
+}
+
+int aoc_service_irq_index(aoc_service *service)
+{
+        struct aoc_ipc_service_header *header = service;
+        return (header->flags & AOC_SERVICE_IRQ_MASK) >> AOC_SERVICE_IRQ_SHIFT;
 }
 
 size_t aoc_ring_bytes_read(aoc_service *service, aoc_direction dir)
@@ -231,7 +252,7 @@ size_t aoc_service_message_size(aoc_service *service, aoc_direction dir)
 		return 0;
 
 	region = &header->regions[dir];
-	if (aoc_service_is_ring(service)) {
+	if (aoc_service_is_ring(service) || aoc_service_is_buffer(service)) {
 		return region->size;
 	} else {
 		const size_t header_size =
@@ -314,6 +335,9 @@ size_t aoc_service_slots_available_to_read(aoc_service *service,
 	if (ioread32(&region->slots) == 0)
 		return 0;
 
+	if (aoc_service_is_buffer(service))
+		return 0;
+
 	if (aoc_service_is_ring(service)) {
 		/*
      * Rings have one slot and the tx/rx counters specify bytes.  If the
@@ -346,6 +370,8 @@ size_t aoc_service_slots_available_to_write(aoc_service *service,
 
 	if (aoc_service_is_ring(service)) {
 		return 1;
+	} else if (aoc_service_is_buffer(service)) {
+		return 0;
 	} else {
 		size_t diff = _difference_with_overflow(region);
 
@@ -644,7 +670,8 @@ size_t aoc_service_ring_read_offset(aoc_service *service, aoc_direction dir)
 	return s->regions[dir].rx % s->regions[dir].size;
 }
 
-bool aoc_ring_is_push(aoc_service *service) {
+bool aoc_ring_is_push(aoc_service *service)
+{
 	struct aoc_ipc_service_header *s =
 		(struct aoc_ipc_service_header *)service;
 
