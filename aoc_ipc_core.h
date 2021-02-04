@@ -44,6 +44,15 @@ typedef enum {
 } aoc_direction;
 
 /**
+ * Check if a passed in service is a queue
+ *
+ * \param[in] service pointer to a service
+ *
+ * \return true if service is a message queue, otherwise false
+ */
+bool aoc_service_is_queue(aoc_service *service);
+
+/**
  * Check if a passed in service is a ring
  *
  * \param[in] service pointer to a service
@@ -51,6 +60,24 @@ typedef enum {
  * \return true if service is a ring service, otherwise false
  */
 bool aoc_service_is_ring(aoc_service *service);
+
+/**
+ * Check if a passed in service is a buffer
+ *
+ * \param[in] service pointer to a service
+ *
+ * \return true if service is a named buffer, otherwise false
+ */
+bool aoc_service_is_buffer(aoc_service *service);
+
+/**
+ * Return the interrupt index for a service
+ *
+ * \param[in] service pointer to a service
+ *
+ * \return interrupt index for the service
+ */
+int aoc_service_irq_index(aoc_service *service);
 
 /**
  * Return the name of a service
