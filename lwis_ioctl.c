@@ -1332,6 +1332,12 @@ int lwis_ioctl_handler(struct lwis_client *lwis_client, unsigned int type, unsig
 	bool device_disabled;
 	struct lwis_device *lwis_dev = lwis_client->lwis_dev;
 
+	// Skip the lock for LWIS_EVENT_DEQUEUE because we want to emit events ASAP. The internal
+	// handler function of LWIS_EVENT_DEQUEUE will acquire the necessary lock.
+	if (type != LWIS_EVENT_DEQUEUE) {
+		mutex_lock(&lwis_client->lock);
+	}
+
 	mutex_lock(&lwis_dev->client_lock);
 	device_disabled = (lwis_dev->enabled == 0);
 	mutex_unlock(&lwis_dev->client_lock);
@@ -1345,7 +1351,7 @@ int lwis_ioctl_handler(struct lwis_client *lwis_client, unsigned int type, unsig
 	    type != LWIS_DPM_QOS_UPDATE && type != LWIS_DPM_GET_CLOCK) {
 		ret = -EBADFD;
 		dev_err_ratelimited(lwis_dev->dev, "Unsupported IOCTL on disabled device.\n");
-		return ret;
+		goto out;
 	}
 
 	switch (type) {
@@ -1421,5 +1427,9 @@ int lwis_ioctl_handler(struct lwis_client *lwis_client, unsigned int type, unsig
 		ret = -EINVAL;
 	};
 
+out:
+	if (type != LWIS_EVENT_DEQUEUE) {
+		mutex_unlock(&lwis_client->lock);
+	}
 	return ret;
 }
