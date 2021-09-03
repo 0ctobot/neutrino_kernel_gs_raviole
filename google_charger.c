@@ -282,6 +282,7 @@ static void chg_psy_work(struct work_struct *work)
 {
 	struct chg_drv *chg_drv =
 		container_of(work, struct chg_drv, chg_psy_work);
+
 	reschedule_chg_work(chg_drv);
 }
 
@@ -1770,6 +1771,9 @@ static void chg_work(struct work_struct *work)
 				chg_drv->stop_charging = 1;
 		}
 
+		if (chg_is_custom_enabled(chg_drv) && chg_drv->disable_pwrsrc)
+			chg_run_defender(chg_drv);
+
 		/* allow sleep (if disconnected) while draining */
 		if (chg_drv->disable_pwrsrc)
 			__pm_relax(chg_drv->bd_ws);
@@ -2541,6 +2545,11 @@ static int chg_vote_input_suspend(struct chg_drv *chg_drv,
 		dev_err(chg_drv->device, "Couldn't vote to %s DC rc=%d\n",
 			suspend ? "suspend" : "resume", rc);
 
+	rc = vote(chg_drv->msc_chg_disable_votable, voter, suspend, 0);
+	if (rc < 0)
+		dev_err(chg_drv->device, "Couldn't vote to %s USB rc=%d\n",
+			suspend ? "suspend" : "resume", rc);
+
 	return 0;
 }
 
@@ -2571,12 +2580,6 @@ static int chg_set_input_suspend(void *data, u64 val)
 	rc = chg_vote_input_suspend(chg_drv, USER_VOTER, val != 0);
 	if (rc < 0)
 		return rc;
-
-	/* make sure that power is disabled */
-	rc = vote(chg_drv->msc_chg_disable_votable, USER_VOTER, val != 0, 0);
-	if (rc < 0)
-		dev_err(chg_drv->device, "Couldn't vote to %s USB rc=%d\n",
-			val != 0 ? "suspend" : "resume", rc);
 
 	if (chg_drv->chg_psy)
 		power_supply_changed(chg_drv->chg_psy);
