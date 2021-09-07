@@ -3659,7 +3659,8 @@ static ssize_t features_store(struct device *dev,
 	pr_debug("%s: tx_id=%llx, ft=%llx", __func__, id, ft);
 
 	if (id) {
-		feature_update_cache(&charger->chg_features, id, ft);
+		if (id != 1)
+			feature_update_cache(&charger->chg_features, id, ft);
 		/*
 		 * disable prefill of feature cache on first use of the API,
 		 * TODO: possibly clear the cache as well.
@@ -3683,11 +3684,15 @@ static ssize_t features_show(struct device *dev,
 	struct p9221_charger_data *charger = i2c_get_clientdata(client);
 	struct p9221_charger_feature *chg_fts = &charger->chg_features;
 	struct p9221_charger_feature_entry *entry = &chg_fts->entries[0];
+	u64 session_features = chg_fts->session_features;
 	int idx;
 	ssize_t len = 0;
 
+	if (!charger->wlc_dc_enabled)
+		session_features &= ~WLCF_FAST_CHARGE;
+
 	len += scnprintf(buf + len, PAGE_SIZE - len, "0:%llx\n",
-			 chg_fts->session_features);
+			 session_features);
 
 	for (idx = 0; idx < chg_fts->num_entries; idx++, entry++) {
 		if (entry->quickid == 0 || entry->features == 0)
@@ -5937,6 +5942,8 @@ static int p9221_charger_probe(struct i2c_client *client,
 			power_supply_changed(charger->dc_psy);
 	}
 
+	/* prefill txid 1 with API revision number (1) */
+	feature_update_cache(&charger->chg_features, 1, 1);
 	return 0;
 }
 
