@@ -2136,7 +2136,8 @@ static void p9221_set_capacity(struct p9221_charger_data *charger, int capacity)
 
 	mutex_lock(&charger->stats_lock);
 
-	if (charger->last_capacity == capacity)
+	if (charger->last_capacity == capacity &&
+		(capacity != 100 || !p9221_is_epp(charger)))
 		goto unlock_done;
 
 	charger->last_capacity = capacity;
@@ -2152,10 +2153,7 @@ static void p9221_set_capacity(struct p9221_charger_data *charger, int capacity)
 	if (charger->online && charger->last_capacity >= 0 && charger->last_capacity <= 100)
 		mod_delayed_work(system_wq, &charger->charge_stats_work, 0);
 
-	if (!charger->online)
-		goto unlock_done;
-
-	if (p9221_is_epp(charger))
+	if (charger->online && p9221_is_epp(charger))
 		p9221_dream_defend(charger);
 
 	/* CEP LL workaround tp improve comms */
