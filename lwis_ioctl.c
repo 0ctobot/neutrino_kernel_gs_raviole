@@ -980,6 +980,7 @@ static int ioctl_transaction_submit(struct lwis_client *client,
 	int ret;
 	unsigned long flags;
 	struct lwis_transaction *k_transaction = NULL;
+	struct lwis_transaction_info k_transaction_info;
 	struct lwis_device *lwis_dev = client->lwis_dev;
 
 	ret = construct_transaction(client, msg, &k_transaction);
@@ -998,15 +999,16 @@ static int ioctl_transaction_submit(struct lwis_client *client,
 		free_transaction(k_transaction);
 		return ret;
 	}
+	k_transaction_info = k_transaction->info;
+	spin_unlock_irqrestore(&client->transaction_lock, flags);
 
-	if (copy_to_user((void __user *)msg, &k_transaction->info,
+	if (copy_to_user((void __user *)msg, &k_transaction_info,
 			 sizeof(struct lwis_transaction_info))) {
 		ret = -EFAULT;
 		dev_err_ratelimited(lwis_dev->dev,
 				    "Failed to copy transaction results to userspace\n");
 	}
 
-	spin_unlock_irqrestore(&client->transaction_lock, flags);
 	return ret;
 }
 
@@ -1016,6 +1018,7 @@ static int ioctl_transaction_replace(struct lwis_client *client,
 	int ret;
 	unsigned long flags;
 	struct lwis_transaction *k_transaction;
+	struct lwis_transaction_info k_transaction_info;
 	struct lwis_device *lwis_dev = client->lwis_dev;
 
 	ret = construct_transaction(client, msg, &k_transaction);
@@ -1035,15 +1038,16 @@ static int ioctl_transaction_replace(struct lwis_client *client,
 		free_transaction(k_transaction);
 		return ret;
 	}
+	k_transaction_info = k_transaction->info;
+	spin_unlock_irqrestore(&client->transaction_lock, flags);
 
-	if (copy_to_user((void __user *)msg, &k_transaction->info,
+	if (copy_to_user((void __user *)msg, &k_transaction_info,
 			 sizeof(struct lwis_transaction_info))) {
 		ret = -EFAULT;
 		dev_err_ratelimited(lwis_dev->dev,
 				    "Failed to copy transaction results to userspace\n");
 	}
 
-	spin_unlock_irqrestore(&client->transaction_lock, flags);
 	return ret;
 }
 
