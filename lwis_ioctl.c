@@ -664,6 +664,7 @@ static int ioctl_device_reset(struct lwis_client *lwis_client, struct lwis_io_en
 	struct lwis_io_entries k_msg;
 	struct lwis_io_entry *k_entries = NULL;
 	unsigned long flags;
+	bool device_enabled = false;
 
 	ret = copy_io_entries(lwis_dev, user_msg, &k_msg, &k_entries);
 	if (ret) {
@@ -674,6 +675,7 @@ static int ioctl_device_reset(struct lwis_client *lwis_client, struct lwis_io_en
 	mutex_lock(&lwis_dev->client_lock);
 	lwis_client_event_states_clear(lwis_client);
 	lwis_client_event_queue_clear(lwis_client);
+	device_enabled = lwis_dev->enabled;
 	mutex_unlock(&lwis_dev->client_lock);
 
 	/* Flush all periodic io to complete */
@@ -689,8 +691,13 @@ static int ioctl_device_reset(struct lwis_client *lwis_client, struct lwis_io_en
 	}
 
 	/* Perform reset routine defined by the io_entries */
-	ret = synchronous_process_io_entries(lwis_dev, k_msg.num_io_entries, k_entries,
-					     k_msg.io_entries);
+	if (device_enabled) {
+		ret = synchronous_process_io_entries(lwis_dev, k_msg.num_io_entries, k_entries,
+						     k_msg.io_entries);
+	} else {
+		dev_warn(lwis_dev->dev,
+			 "Device is not enabled, IoEntries will not be executed in DEVICE_RESET\n");
+	}
 
 	spin_lock_irqsave(&lwis_dev->lock, flags);
 	lwis_device_event_states_clear_locked(lwis_dev);
