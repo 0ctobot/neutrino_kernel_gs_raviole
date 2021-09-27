@@ -447,12 +447,13 @@ static int gcpm_dc_enable(struct gcpm_drv *gcpm, bool enabled)
  */
 static int gcpm_dc_stop(struct gcpm_drv *gcpm, int index)
 {
+	int dc_state = gcpm->dc_state;
 	int ret = 0;
 
 	if (!gcpm_is_dc(gcpm, index))
-		return 0;
+		dc_state = DC_ENABLE_PASSTHROUGH;
 
-	switch (gcpm->dc_state) {
+	switch (dc_state) {
 	case DC_RUNNING:
 	case DC_PASSTHROUGH:
 		ret = gcpm_chg_offline(gcpm, index);
