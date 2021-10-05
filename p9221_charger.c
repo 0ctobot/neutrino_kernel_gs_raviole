@@ -537,7 +537,7 @@ static int p9221_reset_wlc_dc(struct p9221_charger_data *charger)
 	const int dc_sw_gpio = charger->pdata->dc_switch_gpio;
 	const int extben_gpio = charger->pdata->ext_ben_gpio;
 	const int req_pwr = EPP_MODE_REQ_PWR;
-	int ret;
+	int ret, i;
 	u8 cdmode;
 
 	if (!charger->wlc_dc_enabled)
@@ -550,6 +550,10 @@ static int p9221_reset_wlc_dc(struct p9221_charger_data *charger)
 		gpio_set_value_cansleep(extben_gpio, 0);
 
 	p9221_set_switch_reg(charger, false);
+
+	ret = p9221_set_hpp_dc_icl(charger, false);
+	if (ret < 0)
+		dev_warn(&charger->client->dev, "Cannot disable HPP_ICL (%d)\n", ret);
 
 	/* Check it's in Cap Div mode */
 	ret = charger->reg_read_8(charger, P9412_CDMODE_STS_REG, &cdmode);
@@ -568,7 +572,12 @@ static int p9221_reset_wlc_dc(struct p9221_charger_data *charger)
 				"p9221_reset_wlc_dc: Fail to request Tx power(%d)\n", ret);
 	}
 
-	msleep(3000);
+	/* total 3 seconds wait and early exit when WLC offline */
+	for (i = 0; i < 30; i += 1) {
+		usleep_range(100 * USEC_PER_MSEC, 120 * USEC_PER_MSEC);
+		if (!charger->online)
+			return 0;
+	}
 
 	/* Request Bypass mode */
 	ret = charger->chip_capdiv_en(charger, CDMODE_BYPASS_MODE);
@@ -584,10 +593,6 @@ static int p9221_reset_wlc_dc(struct p9221_charger_data *charger)
 			p9221_write_fod(charger);
 		}
 	}
-
-	ret = p9221_set_hpp_dc_icl(charger, false);
-	if (ret < 0)
-		dev_warn(&charger->client->dev, "Cannot disable HPP_ICL (%d)\n", ret);
 
 	return 0;
 }
