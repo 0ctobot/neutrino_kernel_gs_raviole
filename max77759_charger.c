@@ -937,6 +937,8 @@ static int max77759_force_standby(struct max77759_chgr_data *data)
 			       MAX77759_CHG_CNFG_12_WCINSEL;
 	int ret;
 
+	pr_debug("%s: recovery\n", __func__);
+
 	ret = max77759_ls_mode(uc_data, 0);
 	if (ret < 0)
 		dev_err(data->dev, "%s: cannot change ls_mode (%d)\n",
@@ -1219,6 +1221,14 @@ static int gs101_ext_bst_mode(struct max77759_usecase_data *uc_data, int mode)
  *
  * NOTE: do not call with (cb_data->wlc_rx && cb_data->wlc_tx)
  */
+
+/* was b/179816224 WLC_RX -> WLC_RX + OTG (Transition #10) */
+static int gs101_wlcrx_to_wlcrx_otg(struct max77759_usecase_data *uc_data)
+{
+	pr_warn("%s: disabled\n", __func__);
+	return -ENOTSUPP;
+}
+
 static int max77759_to_otg_usecase(struct max77759_usecase_data *uc_data, int use_case)
 {
 	const int from_uc = uc_data->use_case;
@@ -1270,36 +1280,8 @@ static int max77759_to_otg_usecase(struct max77759_usecase_data *uc_data, int us
 	break;
 
 	case GSU_MODE_WLC_RX:
-		/* b/179816224 WLC_RX -> WLC_RX + OTG (Transition #10) */
-		if (use_case == GSU_MODE_USB_OTG_WLC_RX) {
-
-			/* TODO: debounce the sequence */
-			if (uc_data->cpout_en >= 0)
-				gpio_set_value_cansleep(uc_data->cpout_en, 0);
-
-			/* NBC workaround */
-			ret = max7759_otg_enable(uc_data, EXT_MODE_OTG_5_0V);
-			if (ret == 0) {
-				mdelay(5);
-
-				ret = max77759_chg_reg_write(uc_data->client,
-							     MAX77759_CHG_CNFG_00,
-							     MAX77759_CHGR_MODE_ALL_OFF);
-				if (ret == 0)
-					ret = gs101_ext_bst_mode(uc_data, 1);
-				if (ret == 0)
-					ret = gs101_cpout_mode(uc_data, GS101_WLCRX_CPOUT_5_2V);
-			}
-
-			if (ret < 0)
-				break;
-
-			if (uc_data->cpout_en >= 0)
-				gpio_set_value_cansleep(uc_data->cpout_en, 1);
-
-			/* get_otg_usecase() will set mode */
-		}
-
+		if (use_case == GSU_MODE_USB_OTG_WLC_RX)
+			ret = gs101_wlcrx_to_wlcrx_otg(uc_data);
 	break;
 
 	case GSU_MODE_USB_OTG:
