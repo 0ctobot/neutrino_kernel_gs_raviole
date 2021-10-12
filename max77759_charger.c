@@ -620,18 +620,27 @@ static int gs101_wlc_en(struct max77759_usecase_data *uc_data, bool wlc_on)
 {
 	int ret = 0;
 
-	pr_debug("%s: cpout_en=%d wlc_en=%d wlc_on=%d\n", __func__,
-		 uc_data->cpout_en, uc_data->wlc_en, wlc_on);
+	pr_debug("%s: cpout_en=%d wlc_en=%d wlc_vbus_en=%d wlc_on=%d\n", __func__,
+		 uc_data->cpout_en, uc_data->wlc_en, uc_data->wlc_vbus_en, wlc_on);
 
 	if (uc_data->cpout_en >= 0) {
 		gpio_set_value_cansleep(uc_data->cpout_en, wlc_on);
-	} else if (uc_data->wlc_en >= 0) {
-		/* TODO: wlc_en is active low, fix here or in device tree */
-		gpio_set_value_cansleep(uc_data->wlc_en, !!wlc_on);
-		pr_warn("%s: setting wlc_en=%d\n", __func__, !!wlc_on);
 	} else if (!wlc_on) {
+		/*
+		 * when
+		 *   uc_data->cpout_en != -EPROBE_DEFER && uc_data->wlc_en
+		 * could use uc_data->wlc_en with:
+		 *   gpio_set_value_cansleep(uc_data->wlc_en, !!wlc_on);
+		 *
+		 * BUT need to resolve tjhe race on start since toggling
+		 * ->wlc_en might not be undone by using ->cpout_en
+		 */
 		pr_debug("%s: no toggle for WLC on\n", __func__);
 	}
+
+	/* b/202526678 */
+	if (uc_data->wlc_vbus_en >= 0)
+		gpio_set_value_cansleep(uc_data->wlc_vbus_en, wlc_on);
 
 	return ret;
 }
@@ -1614,7 +1623,30 @@ static int max77759_otg_vbyp_mv_to_code(u8 *code, int vbyp)
 #define GS101_OTG_ILIM_DEFAULT_MA	1500
 #define GS101_OTG_VBYPASS_DEFAULT_MV	5100
 
-/* lazy init on the switched */
+/* lazy init on the switches */
+
+
+static bool gs101_setup_usecases_done(struct max77759_usecase_data *uc_data)
+{
+	return (uc_data->cpout_en != -EPROBE_DEFER) &&
+	       (uc_data->cpout_ctl != -EPROBE_DEFER) &&
+	       (uc_data->wlc_vbus_en != -EPROBE_DEFER);
+
+	/* TODO: handle platform specific differences..
+	       uc_data->ls2_en != -EPROBE_DEFER &&
+	       uc_data->lsw1_is_closed != -EPROBE_DEFER &&
+	       uc_data->lsw1_is_open != -EPROBE_DEFER &&
+	       uc_data->vin_is_valid != -EPROBE_DEFER &&
+	       uc_data->cpout_ctl != -EPROBE_DEFER &&
+	       uc_data->cpout_en != -EPROBE_DEFER &&
+	       uc_data->cpout21_en != -EPROBE_DEFER
+	       uc_data->bst_on != -EPROBE_DEFER &&
+	       uc_data->bst_sel != -EPROBE_DEFER &&
+	       uc_data->ext_bst_ctl != -EPROBE_DEFER;
+	*/
+}
+
+
 static bool max77759_setup_usecases(struct max77759_usecase_data *uc_data,
 				    struct device_node *node)
 {
@@ -1638,11 +1670,13 @@ static bool max77759_setup_usecases(struct max77759_usecase_data *uc_data,
 		uc_data->otg_enable = -EPROBE_DEFER;
 
 		uc_data->wlc_en = -EPROBE_DEFER;
-		uc_data->ext_bst_mode = -EPROBE_DEFER;
-
+		uc_data->wlc_vbus_en = -EPROBE_DEFER;
 		uc_data->cpout_en = -EPROBE_DEFER;
 		uc_data->cpout_ctl = -EPROBE_DEFER;
 		uc_data->cpout21_en = -EPROBE_DEFER;
+
+		uc_data->ext_bst_mode = -EPROBE_DEFER;
+
 		uc_data->init_done = false;
 
 		/* TODO: override in bootloader and remove */
@@ -1689,6 +1723,8 @@ static bool max77759_setup_usecases(struct max77759_usecase_data *uc_data,
 	/*  wlc_rx: disable when chgin, CPOUT is safe */
 	if (uc_data->wlc_en == -EPROBE_DEFER)
 		uc_data->wlc_en = of_get_named_gpio(node, "max77759,wlc-en", 0);
+	if (uc_data->wlc_vbus_en == -EPROBE_DEFER)
+		uc_data->wlc_vbus_en = of_get_named_gpio(node, "max77759,wlc-vbus_en", 0);
 	/*  wlc_rx -> wlc_rx+otg disable cpout */
 	if (uc_data->cpout_en == -EPROBE_DEFER)
 		uc_data->cpout_en = of_get_named_gpio(node, "max77759,cpout-en", 0);
@@ -1710,22 +1746,7 @@ static bool max77759_setup_usecases(struct max77759_usecase_data *uc_data,
 	if (uc_data->ext_bst_mode == -EPROBE_DEFER)
 		uc_data->ext_bst_mode = of_get_named_gpio(node, "max77759,extbst-mode", 0);
 
-	if ((uc_data->cpout_en == -EPROBE_DEFER) || (uc_data->cpout_ctl == -EPROBE_DEFER))
-		return false;
-	/* TODO: handle platform specific differences..
-	       uc_data->ls2_en != -EPROBE_DEFER &&
-	       uc_data->lsw1_is_closed != -EPROBE_DEFER &&
-	       uc_data->lsw1_is_open != -EPROBE_DEFER &&
-	       uc_data->vin_is_valid != -EPROBE_DEFER &&
-	       uc_data->cpout_ctl != -EPROBE_DEFER &&
-	       uc_data->cpout_en != -EPROBE_DEFER &&
-	       uc_data->cpout21_en != -EPROBE_DEFER
-	       uc_data->bst_on != -EPROBE_DEFER &&
-	       uc_data->bst_sel != -EPROBE_DEFER &&
-	       uc_data->ext_bst_ctl != -EPROBE_DEFER;
-	*/
-
-	return true;
+	return gs101_setup_usecases_done(uc_data);
 }
 
 static void max77759_dump_usecasase_config(struct max77759_usecase_data *uc_data)
@@ -1734,9 +1755,9 @@ static void max77759_dump_usecasase_config(struct max77759_usecase_data *uc_data
 		 uc_data->bst_on, uc_data->bst_sel, uc_data->ext_bst_ctl);
 	pr_info("vin_valid:%d lsw1_o:%d lsw1_c:%d\n", uc_data->vin_is_valid,
 		 uc_data->lsw1_is_open, uc_data->lsw1_is_closed);
-	pr_info("wlc_en:%d cpout_en:%d cpout_ctl:%d cpout21_en=%d\n",
-		uc_data->wlc_en, uc_data->cpout_en, uc_data->cpout_ctl,
-		uc_data->cpout21_en);
+	pr_info("wlc_en:%d wlc_vbus_en:%d cpout_en:%d cpout_ctl:%d cpout21_en=%d\n",
+		uc_data->wlc_en, uc_data->wlc_vbus_en,
+		uc_data->cpout_en, uc_data->cpout_ctl, uc_data->cpout21_en);
 	pr_info("ls2_en:%d sw_en:%d ext_bst_mode:%d\n",
 		uc_data->ls2_en, uc_data->sw_en, uc_data->ext_bst_mode);
 }

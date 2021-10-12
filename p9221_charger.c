@@ -5617,20 +5617,32 @@ static int p9382a_tx_icl_vote_callback(struct votable *votable, void *data,
 	return ret;
 }
 
+/* called from */
 int p9221_wlc_disable(struct p9221_charger_data *charger, int disable, u8 reason)
 {
 	int ret = 0;
 
 	if ((disable && charger->online) || charger->send_eop) {
+		int rc;
+
 		ret = charger->chip_send_eop(charger, reason);
-		pr_info("Disable Rx communication channel(CMFET): 0xF4 & 0x11B\n");
-		charger->reg_write_8(charger, P9412_CMFET_L_REG, P9412_CMFET_DISABLE_ALL);
-		charger->reg_write_8(charger, P9412_HIVOUT_CMFET_REG, P9412_CMFET_DISABLE_ALL);
+
+		rc = charger->reg_write_8(charger, P9412_CMFET_L_REG, P9412_CMFET_DISABLE_ALL);
+		rc |= charger->reg_write_8(charger, P9412_HIVOUT_CMFET_REG, P9412_CMFET_DISABLE_ALL);
+
+		pr_info("Disabled Rx communication channel(CMFET): 0xF4 & 0x11B (%d)\n", rc);
 		charger->send_eop = false;
-        }
+	}
+
+	/*
+	 * could also change ->qien_gpio (e.g pull low when disable == 0)
+	 * and/or toggle inhibit via ->qi_vbus_en.
+	 * NOTE: using ->qien_gpio to disable the IC while VOUT sis present
+	 * might (is) not supported.
+	 */
 
 	pr_debug("%s: disable=%d, ept_reason=%d ret=%d\n", __func__,
-		 disable, reason, ret);
+		 disable, disable ? reason : -1, ret);
 
 	if (charger->last_disable != disable) {
 		pr_info("%s[%d]: disable=%d, ept_reason=%d ret=%d\n", __func__,
@@ -5813,8 +5825,8 @@ static int p9221_charger_probe(struct i2c_client *client,
 	}
 
 	/*
-	 * Create the WLC_DISABLE votable, use for send EPT and pull high
-	 * QI_EN_L
+	 * Create the WLC_DISABLE votable, use for send EPT
+	 * NOTE: pulling QI_EN_L might not be OK, verify this with EE
 	 */
 	charger->wlc_disable_votable = create_votable("WLC_DISABLE", VOTE_SET_ANY,
 						      p9221_wlc_disable_callback,
