@@ -829,6 +829,12 @@ static int max77759_to_standby(struct max77759_usecase_data *uc_data,
 			need_stby = use_case != GSU_MODE_WLC_RX &&
 				    use_case != GSU_MODE_USB_OTG;
 			break;
+		case GSU_MODE_USB_DC:
+			need_stby = use_case != GSU_MODE_USB_DC;
+			break;
+		case GSU_MODE_WLC_DC:
+			need_stby = use_case != GSU_MODE_WLC_DC;
+			break;
 
 		case GSU_MODE_USB_OTG_FRS:
 			from_otg = true;
@@ -855,7 +861,7 @@ static int max77759_to_standby(struct max77759_usecase_data *uc_data,
 	if (use_case == GSU_MODE_USB_WLC_RX || use_case == GSU_RAW_MODE)
 		need_stby = true;
 
-	pr_info("%s: use_case=%d->%d from_otg=%d need_stby=%x\n", __func__,
+	pr_info("%s: use_case=%d->%d from_otg=%d need_stby=%d\n", __func__,
 		 from_uc, use_case, from_otg, need_stby);
 
 	if (!need_stby)
@@ -1491,14 +1497,15 @@ static int max77759_get_usecase(struct max77759_foreach_cb_data *cb_data)
 {
 	const int buck_on = cb_data->chgin_off ? 0 : cb_data->buck_on;
 	const int chgr_on = cb_data_is_chgr_on(cb_data);
+	bool wlc_tx = cb_data->wlc_tx != 0;
+	bool wlc_rx = cb_data->wlc_rx != 0;
 	bool dc_on = cb_data->dc_on; /* && !cb_data->charge_done */
-	int wlc_tx = cb_data->wlc_tx;
 	int usecase;
 	u8 mode;
 
 	/* consistency check, TOD: add more */
 	if (wlc_tx) {
-		if (cb_data->wlc_rx) {
+		if (wlc_rx) {
 			pr_err("%s: wlc_tx and wlc_rx\n", __func__);
 			return -EINVAL;
 		}
@@ -1514,12 +1521,16 @@ static int max77759_get_usecase(struct max77759_foreach_cb_data *cb_data)
 	if (cb_data->otg_on || cb_data->frs_on)
 		return max77759_get_otg_usecase(cb_data);
 
+	/* USB will disable wlc_rx */
+	if (cb_data->buck_on)
+		wlc_rx = false;
+
 	/* buck_on is wired, wlc_rx is wireless, might still need rTX */
 	if (cb_data->usb_wlc) {
 		/* USB+WLC for factory and testing */
 		usecase = GSU_MODE_USB_WLC_RX;
 		mode = MAX77759_CHGR_MODE_CHGR_BUCK_ON;
-	} else if (!buck_on && !cb_data->wlc_rx) {
+	} else if (!buck_on && !wlc_rx) {
 		mode = MAX77759_CHGR_MODE_ALL_OFF;
 
 		/* Rtx using the internal battery */
@@ -1527,6 +1538,8 @@ static int max77759_get_usecase(struct max77759_foreach_cb_data *cb_data)
 		if (wlc_tx)
 			usecase = GSU_MODE_WLC_TX;
 
+		/* here also on WLC_DC->WLC_DC+USB */
+		dc_on = false;
 	} else if (wlc_tx) {
 
 		if (!buck_on) {
@@ -1545,7 +1558,7 @@ static int max77759_get_usecase(struct max77759_foreach_cb_data *cb_data)
 			usecase = GSU_MODE_USB_CHG_WLC_TX;
 		}
 
-	} else if (cb_data->wlc_rx) {
+	} else if (wlc_rx) {
 
 		/* will be in mode 4 if in stby unless dc is enabled */
 		if (chgr_on) {
@@ -1579,7 +1592,9 @@ static int max77759_get_usecase(struct max77759_foreach_cb_data *cb_data)
 		 * NOTE: mode=0 if standby, mode=5 if charging, mode=0xa on otg
 		 * TODO: handle rTx + DC and some more.
 		 */
-		if (dc_on) {
+		if (dc_on && cb_data->wlc_rx) {
+			/* WLC_DC->WLC_DC+USB -> ignore dc_on */
+		} else if (dc_on) {
 			mode = MAX77759_CHGR_MODE_ALL_OFF;
 			usecase = GSU_MODE_USB_DC;
 		} else if (cb_data->stby_on && !chgr_on) {
@@ -1789,7 +1804,13 @@ static int max77759_set_insel(struct max77759_usecase_data *uc_data,
 	} else if (cb_data->buck_on && !cb_data->chgin_off) {
 		insel_value |= MAX77759_CHG_CNFG_12_CHGINSEL;
 	} else if (cb_data->wlc_rx && !cb_data->wlcin_off) {
-		insel_value |= MAX77759_CHG_CNFG_12_WCINSEL;
+
+		/* always disable WLC when USB is present */
+		if (!cb_data->buck_on)
+			insel_value |= MAX77759_CHG_CNFG_12_WCINSEL;
+		else
+			force_wlc = true;
+
 	} else if (cb_data->otg_on) {
 		/* all OTG cases MUST mask CHGIN */
 		insel_value |= MAX77759_CHG_CNFG_12_WCINSEL;
@@ -1799,7 +1820,7 @@ static int max77759_set_insel(struct max77759_usecase_data *uc_data,
 			insel_value |= MAX77759_CHG_CNFG_12_CHGINSEL;
 
 		/* disconnected, do not enable wlc_in if in input_suspend */
-		if (!cb_data->wlcin_off || cb_data->wlc_tx)
+		if (!cb_data->buck_on && (!cb_data->wlcin_off || cb_data->wlc_tx))
 			insel_value |= MAX77759_CHG_CNFG_12_WCINSEL;
 
 		force_wlc = true;
