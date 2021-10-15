@@ -2916,16 +2916,6 @@ static void hbm_work(struct work_struct *work)
 	}
 
 	usleep_range(delay_us, delay_us + 100);
-	if (ctx->hbm.update_flags & HBM_FLAG_LHBM_UPDATE) {
-		DPU_ATRACE_BEGIN("set_lhbm");
-		dev_info(ctx->dev, "%s: set LHBM to %d (%dHz)\n",
-			__func__, ctx->hbm.local_hbm.request_hbm_mode, fps);
-		mutex_lock(&ctx->mode_lock);
-		panel_update_local_hbm_locked(ctx, ctx->hbm.local_hbm.request_hbm_mode);
-		mutex_unlock(&ctx->mode_lock);
-		DPU_ATRACE_END("set_lhbm");
-	}
-
 	if (ctx->hbm.update_flags & HBM_FLAG_GHBM_UPDATE) {
 		DPU_ATRACE_BEGIN("set_hbm");
 		mutex_lock(&ctx->mode_lock);
@@ -2939,6 +2929,16 @@ static void hbm_work(struct work_struct *work)
 		DPU_ATRACE_BEGIN("set_bl");
 		backlight_update_status(ctx->bl);
 		DPU_ATRACE_END("set_bl");
+	}
+
+	if (ctx->hbm.update_flags & HBM_FLAG_LHBM_UPDATE) {
+		DPU_ATRACE_BEGIN("set_lhbm");
+		dev_info(ctx->dev, "%s: set LHBM to %d (%dHz)\n",
+			__func__, ctx->hbm.local_hbm.request_hbm_mode, fps);
+		mutex_lock(&ctx->mode_lock);
+		panel_update_local_hbm_locked(ctx, ctx->hbm.local_hbm.request_hbm_mode);
+		mutex_unlock(&ctx->mode_lock);
+		DPU_ATRACE_END("set_lhbm");
 	}
 
 	if (ctx->hbm.update_flags & HBM_FLAG_DIMMING_UPDATE) {
