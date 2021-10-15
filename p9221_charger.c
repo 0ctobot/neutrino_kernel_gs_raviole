@@ -1114,17 +1114,14 @@ static void p9221_align_work(struct work_struct *work)
 	struct p9221_charger_data *charger = container_of(work,
 			struct p9221_charger_data, align_work.work);
 
-	/* Disable misaligned message in high power mode, b/159066422 */
-	if (charger->prop_mode_en == true)
-		return;
-
 	if ((charger->chip_id == P9221_CHIP_ID) &&
 	    (charger->pdata->alignment_freq == NULL))
 		return;
 
 	charger->alignment = -1;
 
-	if (!charger->online)
+	/* b/159066422 Disable misaligned message in high power mode */
+	if (!charger->online || charger->prop_mode_en == true)
 		return;
 
 	/*
@@ -1629,9 +1626,12 @@ static void p9221_check_adapter_type(struct p9221_charger_data *charger)
 	if (p9221_get_tx_id_str(charger) != NULL) {
 		u8 id_type = (charger->tx_id & TXID_TYPE_MASK) >> TXID_TYPE_SHIFT;
 
+		if (id_type != charger->chg_data.adapter_type)
+			pr_debug("%s: tx_id=%08x, adapter_type=%x->%x\n", __func__,
+				 charger->tx_id, charger->chg_data.adapter_type,
+				 id_type);
+
 		charger->chg_data.adapter_type = id_type;
-		pr_debug("%s: , tx_id=%08x, adapter_type=%d\n",
-			 __func__, charger->tx_id, charger->chg_data.adapter_type);
 	}
 }
 
