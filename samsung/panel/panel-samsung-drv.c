@@ -1340,7 +1340,7 @@ static void exynos_panel_commit_properties(
 
 		ctx->hbm.update_flags = update_flags;
 		update_flags = 0;
-		queue_work(ctx->hbm.wq, &ctx->hbm.hbm_work);
+		queue_work(system_highpri_wq, &ctx->hbm.hbm_work);
 		mutex_unlock(&ctx->hbm.hbm_work_lock);
 	}
 
