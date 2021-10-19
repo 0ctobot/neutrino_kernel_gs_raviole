@@ -875,7 +875,13 @@ static int p9412_send_eop(struct p9221_charger_data *chgr, u8 reason)
 
 	mutex_lock(&chgr->cmd_lock);
 
-	ret = p9412_send_3eop(chgr, reason);
+	if (reason == P9221_EOP_REVERT_TO_BPP) {
+		ret = chgr->reg_write_8(chgr, P9221R5_EPT_REG, reason);
+		if (ret == 0)
+			ret = chgr->chip_set_cmd(chgr, P9221R5_COM_SENDEPT);
+	} else {
+		ret = p9412_send_3eop(chgr, reason);
+	}
 
 	mutex_unlock(&chgr->cmd_lock);
 

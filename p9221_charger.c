@@ -761,8 +761,6 @@ static void p9221_set_offline(struct p9221_charger_data *charger)
 
 	charger->force_bpp = false;
 	charger->chg_on_rtx = false;
-	if (!charger->wait_for_online)
-		charger->ll_bpp_cep = -EINVAL;
 	p9221_reset_wlc_dc(charger);
 	charger->prop_mode_en = false;
 
@@ -788,7 +786,10 @@ static void p9221_set_offline(struct p9221_charger_data *charger)
 	del_timer(&charger->vrect_timer);
 
 	/* clear all session features */
-	feature_update_session(charger, WLCF_DISABLE_ALL_FEATURE);
+	if (!charger->wait_for_online) {
+		charger->ll_bpp_cep = -EINVAL;
+		feature_update_session(charger, WLCF_DISABLE_ALL_FEATURE);
+	}
 
 	p9221_vote_defaults(charger);
 	if (charger->enabled)
@@ -945,6 +946,8 @@ static void p9221_power_mitigation_work(struct work_struct *work)
 		dev_info(&charger->client->dev, "power_mitigate: offline\n");
 		charger->fod_cnt = 0;
 		charger->trigger_power_mitigation = false;
+		charger->ll_bpp_cep = -EINVAL;
+		feature_update_session(charger, WLCF_DISABLE_ALL_FEATURE);
 		power_supply_changed(charger->wc_psy);
 		return;
 	}
