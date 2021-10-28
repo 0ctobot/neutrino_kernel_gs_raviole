@@ -12,7 +12,7 @@ EXPERIMENTAL_BUILD=${EXPERIMENTAL_BUILD:-0}
 TRIM_NONLISTED_KMI=${TRIM_NONLISTED_KMI:-0}
 LTO=${LTO:-thin}
 KMI_SYMBOL_LIST_STRICT_MODE=${ENABLE_STRICT_KMI:-0}
-DEFAULT_CONFIG="private/gs-google/build.config.slider"
+DEFAULT_CONFIG="gs/kernel/device-modules/build.config.slider"
 DEVICE_KERNEL_BUILD_CONFIG=${DEVICE_KERNEL_BUILD_CONFIG:-${DEFAULT_CONFIG}}
 GKI_KERNEL_PREBUILTS_DIR=
 GKI_KERNEL_BUILD_CONFIG=
@@ -37,7 +37,7 @@ else
     GKI_KERNEL_BUILD_CONFIG=common/build.config.gki.aarch64
   else
     GKI_KERNEL_OUT_DIR=gki-android-mainline
-    GKI_KERNEL_BUILD_CONFIG=aosp/build.config.gki.aarch64
+    GKI_KERNEL_BUILD_CONFIG=common/build.config.gki.aarch64
   fi
 fi
 
@@ -88,23 +88,23 @@ else
   SHA_FILE=boot.img
 fi
 
-# If BUILD_KERNEL is not explicitly set, be sure that there are no aosp/
+# If BUILD_KERNEL is not explicitly set, be sure that there are no common/
 # changes not present in the prebuilt.
 if [ "${CHECK_DIRTY_AOSP}" != "0" ]; then
   PREBUILTS_SHA=$(strings ${GKI_KERNEL_PREBUILTS_DIR}/${SHA_FILE} |
                      grep "Linux version 5.10" |
                      sed -n "s/^.*-g\([0-9a-f]\{12\}\)-.*/\1/p")
-  pushd aosp/ > /dev/null
+  pushd common/ > /dev/null
     # The AOSP sha can sometimes be longer than 12 characters; fix its length.
     AOSP_SHA=$(git log -1 --abbrev=12 --pretty="format:%h")
     if [ "${PREBUILTS_SHA}" != "${AOSP_SHA}" -o -n \
          "$(git --no-optional-locks status -uno --porcelain ||
             git diff-index --name-only HEAD)" ]; then
-      echo "WARNING: There are aosp/ changes which are not in the prebuilts."
+      echo "WARNING: There are common/ changes which are not in the prebuilts."
       echo "  Because you did not specify BUILD_KERNEL=0 or 1, $0"
       echo "  defaulted to building with the prebuilts. Please be aware that"
-      echo "  your changes to aosp/ will not be present in the final images. If"
-      echo "  you have made changes to aosp/, it is recommended to explicitly"
+      echo "  your changes to common/ will not be present in the final images. If"
+      echo "  you have made changes to common/, it is recommended to explicitly"
       echo "  set BUILD_KERNEL=0 if you wish to use the prebuilts, or to 1 if"
       echo "  you wish to build any local changes you may have."
     fi
