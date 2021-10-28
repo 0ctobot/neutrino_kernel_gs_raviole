@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: GPL-2.0
+
+menuconfig DEVICE_MODULES
+	bool "Support for compiling out-of-tree modules within the kernel tree"
+	help
+	  Say Y if you want to compile the drivers within this device-modules folder.
+
+if DEVICE_MODULES
+
+endif # DEVICE_MODULES
