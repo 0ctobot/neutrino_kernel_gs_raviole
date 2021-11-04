@@ -6,7 +6,7 @@
 #include <linux/types.h>
 #endif
 
-#include "drm.h"
+#include <drm/drm.h>
 
 #if defined(__cplusplus)
 extern "C" {
