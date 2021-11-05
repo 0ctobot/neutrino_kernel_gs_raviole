@@ -124,7 +124,7 @@ panel-samsung-s6e3hc2.ko
 panel-samsung-s6e3hc3.ko
 panel-samsung-sofef01.ko
 pca9468.ko
-pcie-exynos-core.ko
+pcie-exynos-gs.ko
 pcie-exynos-gs101-rc-cal.ko
 phy-exynos-mipi-dsim.ko
 phy-exynos-mipi.ko

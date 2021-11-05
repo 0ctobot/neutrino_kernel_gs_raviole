@@ -17,7 +17,7 @@
 #define PCIE_L1SS_CTRL_WIFI	(0x1 << 4)
 #define PCIE_L1SS_CTRL_TEST	(0x1 << 31)
 
-#if IS_ENABLED(CONFIG_PCI_EXYNOS)
+#if IS_ENABLED(CONFIG_PCI_EXYNOS_GS)
 extern int exynos_pcie_l1ss_ctrl(int enable, int id);
 extern int exynos_pcie_rc_l1ss_ctrl(int enable, int id, int ch_num);
 #endif
