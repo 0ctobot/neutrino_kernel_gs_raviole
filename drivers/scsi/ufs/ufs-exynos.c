@@ -20,7 +20,7 @@
 #include "unipro.h"
 #include "ufshcd-pltfrm.h"
 #include "ufs_quirks.h"
-#include "ufs-exynos.h"
+#include "ufs-exynos-gs.h"
 #include <linux/mfd/syscon.h>
 #include <linux/regmap.h>
 #include <linux/spinlock.h>

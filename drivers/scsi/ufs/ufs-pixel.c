@@ -7,8 +7,7 @@
  * Authors: Jaegeuk Kim <jaegeuk@google.com>
  */
 
-#include "ufs-pixel.h"
-#include "ufs-exynos.h"
+#include "ufs-exynos-gs.h"
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/ufs_pixel.h>

@@ -7,4 +7,6 @@ menuconfig DEVICE_MODULES
 
 if DEVICE_MODULES
 
+source "device-modules/drivers/scsi/ufs/Kconfig"
+
 endif # DEVICE_MODULES

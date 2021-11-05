@@ -13,10 +13,10 @@
 #define _UFS_EXYNOS_H_
 
 #include <soc/google/exynos_pm_qos.h>
+#include "ufs-pixel.h"
 #include "ufs-vs-mmio.h"
 #include "ufs-vs-regs.h"
 #include "ufs-cal-if.h"
-#include "ufs-pixel.h"
 
 #define UFS_VER_0004	4
 #define UFS_VER_0005	5
