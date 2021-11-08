@@ -29,7 +29,8 @@
 
 #include <dt-bindings/pinctrl/samsung.h>
 
-#include "../core.h"
+/* core.h should come from <ACK>/drivers/pinctrl */
+#include "core.h"
 #include "pinctrl-samsung.h"
 
 /* maximum number of the memory resources */
@@ -1440,7 +1441,7 @@ static const struct of_device_id samsung_pinctrl_dt_match[] = {
 	{ .compatible = "samsung,s5pv210-pinctrl",
 		.data = &s5pv210_of_data },
 #endif
-#ifdef CONFIG_PINCTRL_EXYNOS_ARM64
+#if defined(CONFIG_PINCTRL_EXYNOS_ARM64) || IS_ENABLED(CONFIG_PINCTRL_EXYNOS_GS)
 	{ .compatible = "samsung,exynos5433-pinctrl",
 		.data = &exynos5433_of_data },
 	{ .compatible = "samsung,exynos7-pinctrl",

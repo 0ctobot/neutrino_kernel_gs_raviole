@@ -21,7 +21,7 @@ extern void exynos_system_idle_exit(int cancel);
  * external driver APIs
  */
 
-#ifdef CONFIG_PINCTRL_EXYNOS
+#if IS_ENABLED(CONFIG_PINCTRL_EXYNOS_GS)
 extern u64 exynos_get_eint_wake_mask(void);
 #else
 static inline u64 exynos_get_eint_wake_mask(void) { return ULLONG_MAX; }

@@ -129,7 +129,7 @@ pcie-exynos-gs101-rc-cal.ko
 phy-exynos-mipi-dsim.ko
 phy-exynos-mipi.ko
 phy-exynos-usbdrd-super.ko
-pinctrl-samsung-core.ko
+pinctrl-exynos-gs.ko
 pixel-boot-metrics.ko
 pixel-debug-test.ko
 pixel_stat_mm.ko
