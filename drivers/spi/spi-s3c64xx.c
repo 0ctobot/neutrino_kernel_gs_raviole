@@ -22,7 +22,7 @@
 #include <linux/mfd/syscon.h>
 #include <linux/regmap.h>
 
-#include <linux/platform_data/spi-s3c64xx.h>
+#include <linux/platform_data/spi-s3c64xx-gs.h>
 
 #include <linux/dma/dma-pl330.h>
 
