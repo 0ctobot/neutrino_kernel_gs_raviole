@@ -1,0 +1,296 @@
+# Copyright (C) 2021 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+package(
+    default_visibility = [
+        "//gs/google-modules:__subpackages__",
+    ],
+)
+
+load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
+load("//build/bazel_common_rules/dist:dist.bzl", "copy_to_dist_dir")
+load("//build/kleaf:common_kernels.bzl", "aarch64_outs")
+load(
+    "//build/kleaf:kernel.bzl",
+    "kernel_build",
+    "kernel_build_config",
+    "kernel_images",
+    "kernel_modules_install",
+)
+
+genrule(
+    name = "build.config.mix",
+    outs = ["build.config.mix.generated"],
+    # Now that the build config is generated, the inferred KERNEL_DIR is
+    # incorrect. Set it manually.
+    cmd = """
+        echo MIXED_BUILD=1 > $@
+        echo KERNEL_DIR=gs/kernel/device-modules >> $@
+        """,
+)
+
+kernel_build_config(
+    name = "build.config.slider.mix",
+    srcs = [
+        # do not sort
+        ":build.config.mix",
+        "build.config.slider",
+    ],
+)
+
+kernel_build(
+    name = "slider",
+    srcs = glob(
+        ["**"],
+        exclude = [
+            ".*",
+            ".*/**",
+            "BUILD.bazel",
+            "**/*.bzl",
+        ],
+    ) + [
+        "//gs/kernel:sources",
+    ],
+    outs = [
+        # Sync with build.config.slider
+        "arch/arm64/boot/dts/google/gs101-a0.dtb",
+        "arch/arm64/boot/dts/google/gs101-b0.dtb",
+        "arch/arm64/boot/dts/google/dtbo.img",
+        "arch/arm64/boot/dts/google/gs101-dpm-eng.dtbo",
+        "arch/arm64/boot/dts/google/gs101-dpm-user.dtbo",
+        "arch/arm64/boot/dts/google/gs101-dpm-userdebug.dtbo",
+    ],
+    base_kernel = "//common:kernel_aarch64",
+    build_config = ":build.config.slider.mix",
+    module_outs = [
+        # keep sorted
+        "acpm_flexpmu_dbg.ko",
+        "acpm_mbox_test.ko",
+        "arm-memlat-mon.ko",
+        "arm_dsu_pmu.ko",
+        "at24.ko",
+        "bbd.ko",
+        "bc_max77759.ko",
+        "bcm47765.ko",
+        "bcm_dbg.ko",
+        "bigocean.ko",
+        "boot_device_spi.ko",
+        "clk_exynos.ko",
+        "cmupmucal.ko",
+        "cp_thermal_zone.ko",
+        "cpif.ko",
+        "dbgcore-dump.ko",
+        "debug-reboot.ko",
+        "debug-snapshot-debug-kinfo.ko",
+        "debug-snapshot-qd.ko",
+        "debug-snapshot-sfrdump.ko",
+        "deferred-free-helper.ko",
+        "delay_init.ko",
+        "dss.ko",
+        "dwc3-exynos-usb.ko",
+        "ect_parser.ko",
+        "eh.ko",
+        "exynos-acme.ko",
+        "exynos-adv-tracer.ko",
+        "exynos-adv-tracer-s2d.ko",
+        "exynos-bcm_dbg-dump.ko",
+        "exynos-bts.ko",
+        "exynos-btsopsgs101.ko",
+        "exynos-coresight.ko",
+        "exynos-coresight-etm.ko",
+        "exynos-cpuhp.ko",
+        "exynos-cpupm.ko",
+        "exynos-debug-test.ko",
+        "exynos-dm.ko",
+        "exynos-ecc-handler.ko",
+        "exynos-pd.ko",
+        "exynos-pd-dbg.ko",
+        "exynos-pd_el3.ko",
+        "exynos-pm.ko",
+        "exynos-pmu-if.ko",
+        "exynos-seclog.ko",
+        "exynos_devfreq.ko",
+        "exynos_dit.ko",
+        "exynos_mct.ko",
+        "exynos_mfc.ko",
+        "exynos_pm_qos.ko",
+        "exynos_tty.ko",
+        "exyswd-rng.ko",
+        "g2d.ko",
+        "goodixfp.ko",
+        "google_bcl.ko",
+        "governor_memlat.ko",
+        "gpu_cooling.ko",
+        "gs-chipid.ko",
+        "gs101-itmon.ko",
+        "gs101_spmic_thermal.ko",
+        "gs101_thermal.ko",
+        "gs_acpm.ko",
+        "gsa.ko",
+        "gsa_gsc.ko",
+        "gsc-spi.ko",
+        "gvotable.ko",
+        "hardlockup-debug.ko",
+        "hardlockup-watchdog.ko",
+        "i2c-acpm.ko",
+        "i2c-dev.ko",
+        "i2c-exynos5.ko",
+        "keycombo.ko",
+        "keydebug.ko",
+        "logbuffer.ko",
+        "max77759_contaminant.ko",
+        "max77759_helper.ko",
+        "max77826-gs-regulator.ko",
+        "memlat-devfreq.ko",
+        "odpm.ko",
+        "page_pool.ko",
+        "pcie-exynos-core.ko",
+        "pcie-exynos-gs101-rc-cal.ko",
+        "phy-exynos-mipi.ko",
+        "phy-exynos-mipi-dsim.ko",
+        "phy-exynos-usbdrd-super.ko",
+        "pinctrl-samsung-core.ko",
+        "pinctrl-slg51000.ko",
+        "pixel-boot-metrics.ko",
+        "pixel-debug-test.ko",
+        "pixel_stat_mm.ko",
+        "pixel_stat_sysfs.ko",
+        "pktgen.ko",
+        "pl330.ko",
+        "pmic_class.ko",
+        "power_stats.ko",
+        "rtc-s2mpg10.ko",
+        "s2mpg10-mfd.ko",
+        "s2mpg10-powermeter.ko",
+        "s2mpg10-regulator.ko",
+        "s2mpg11-mfd.ko",
+        "s2mpg11-powermeter.ko",
+        "s2mpg11-regulator.ko",
+        "s2mpg1x-gpio.ko",
+        "s2mpu.ko",
+        "s3c2410_wdt.ko",
+        "samsung-dma.ko",
+        "samsung-iommu-group.ko",
+        "samsung-secure-iova.ko",
+        "samsung_dma_heap.ko",
+        "samsung_iommu.ko",
+        "sbb-mux.ko",
+        "sg.ko",
+        "shm_ipc.ko",
+        "sjtag-driver.ko",
+        "slc_acpm.ko",
+        "slc_dummy.ko",
+        "slc_pmon.ko",
+        "slc_pt.ko",
+        "slg46826.ko",
+        "slg51000-core.ko",
+        "slg51000-regulator.ko",
+        "smfc.ko",
+        "snd-soc-max98357a.ko",
+        "snd-soc-rl6231.ko",
+        "snd-soc-rt5682.ko",
+        "snd-soc-rt5682-i2c.ko",
+        "softdog.ko",
+        "spi-s3c64xx.ko",
+        "spidev.ko",
+        "sscoredump.ko",
+        "stmvl53l1.ko",
+        "systrace.ko",
+        "tcpci_fusb307.ko",
+        "tcpci_max77759.ko",
+        "trusty-core.ko",
+        "trusty-ipc.ko",
+        "trusty-irq.ko",
+        "trusty-log.ko",
+        "trusty-test.ko",
+        "trusty-virtio.ko",
+        "ufs-exynos-core.ko",
+        "usb_f_dm.ko",
+        "usb_f_dm1.ko",
+        "usb_psy.ko",
+        "usbc_cooling_dev.ko",
+        "videobuf2-dma-sg.ko",
+        "xhci-exynos.ko",
+        "zsmalloc.ko",
+    ],
+    # Keep in sync with build.config.common
+    toolchain_version = "r433403",
+    deps = [
+        "//prebuilts/misc/linux-x86/libufdt:mkdtimg",
+    ],
+)
+
+kernel_modules_install(
+    name = "slider_modules_install",
+    kernel_build = ":slider",
+    kernel_modules = [
+        # keep sorted
+        "//gs/google-modules/amplifiers/audiometrics:audiometrics.slider",
+        "//gs/google-modules/amplifiers/cs35l41:cs35l41.slider",
+        "//gs/google-modules/amplifiers/cs40l25:cs40l25.slider",
+        "//gs/google-modules/amplifiers/drv2624:drv2624.slider",
+        "//gs/google-modules/aoc:aoc.slider",
+        "//gs/google-modules/aoc/alsa:alsa.slider",
+        "//gs/google-modules/bluetooth/broadcom:broadcom.slider",
+        "//gs/google-modules/bms:bms.slider",
+        "//gs/google-modules/display/samsung:samsung.slider",
+        "//gs/google-modules/edgetpu/drivers/edgetpu:edgetpu.slider",
+        "//gs/google-modules/gpu/mali_kbase:mali_kbase.slider",
+        "//gs/google-modules/gpu/mali_pixel:mali_pixel.slider",
+        "//gs/google-modules/lwis:lwis.slider",
+        "//gs/google-modules/nfc:nfc.slider",
+        "//gs/google-modules/power/reset:reset.slider",
+        "//gs/google-modules/touch/common:common.slider",
+        "//gs/google-modules/touch/fts/ftm5:ftm5.slider",
+        "//gs/google-modules/touch/sec:sec.slider",
+        "//gs/google-modules/uwb/kernel:kernel.slider",
+        "//gs/google-modules/wlan/bcmdhd4389:bcmdhd4389.slider",
+    ],
+)
+
+kernel_images(
+    name = "slider_images",
+    build_boot_images = True,
+    build_vendor_dlkm = True,
+    kernel_build = ":slider",
+    kernel_modules_install = ":slider_modules_install",
+    deps = [
+        # Keep the following in sync with build.config.slider:
+        # MODULES_LIST
+        "vendor_boot_modules.slider",
+        # No MODULES_BLOCKLIST
+
+        # Keep the following in sync with build.config.gs101:
+        # VENDOR_DLKM_MODULES_LIST
+        "vendor_dlkm_modules.slider",
+        # VENDOR_DLKM_PROPS
+        "vendor_dlkm.props.slider",
+        # VENDOR_RAMDISK_BINARY
+        "//prebuilts/boot-artifacts/ramdisks:vendor_ramdisk-oriole.img",
+        # No VENDOR_DLKM_MODULES_BLOCKLIST
+
+        # Keep the following in sync with vendor_dlkm.props.slider:
+        # selinux_fc
+        "//prebuilts/boot-artifacts/selinux:file_contexts",
+    ],
+)
+
+copy_to_dist_dir(
+    name = "slider_dist",
+    data = [
+        ":slider_for_dist",
+        ":slider_images",
+        ":slider_modules_install",
+        "//common:kernel_aarch64_for_dist",
+    ],
+)
