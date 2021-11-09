@@ -6,3 +6,4 @@ obj-y += drivers/pci/controller/dwc/
 
 obj-y += drivers/scsi/ufs/
 
+obj-y += drivers/i2c/busses/

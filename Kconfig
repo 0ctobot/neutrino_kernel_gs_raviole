@@ -11,6 +11,8 @@ source "device-modules/drivers/pci/controller/dwc/Kconfig"
 
 source "device-modules/drivers/scsi/ufs/Kconfig"
 
+source "device-modules/drivers/i2c/busses/Kconfig"
+
 source "device-modules/drivers/pinctrl/Kconfig"
 
 endif # DEVICE_MODULES
