@@ -1,0 +1,63 @@
+DEVICE_MODULES_DIR=${KERNEL_DIR}
+ # This project should be nested inside a kernel tree
+KERNEL_DIR="${KERNEL_DIR}/.."
+
+. ${ROOT_DIR}/${DEVICE_MODULES_DIR}/build.config.gs101
+
+MAKE_GOALS="$MAKE_GOALS
+modules
+google/gs101-a0.dtb
+google/gs101-b0.dtb
+google/dtbo.img
+google/gs101-dpm-eng.dtbo
+google/gs101-dpm-user.dtbo
+google/gs101-dpm-userdebug.dtbo
+"
+
+FILES="
+arch/arm64/boot/dts/google/gs101-a0.dtb
+arch/arm64/boot/dts/google/gs101-b0.dtb
+arch/arm64/boot/dts/google/dtbo.img
+arch/arm64/boot/dts/google/gs101-dpm-eng.dtbo
+arch/arm64/boot/dts/google/gs101-dpm-user.dtbo
+arch/arm64/boot/dts/google/gs101-dpm-userdebug.dtbo
+"
+
+if [ -z "$MIXED_BUILD" ]; then
+FILES="$FILES
+$DEVICE_KERNEL_FILES
+"
+fi
+
+MODULES_LIST=${DEVICE_MODULES_DIR}/vendor_boot_modules.slider
+
+VENDOR_RAMDISK_CMDS="modify_vendor_ramdisk"
+function modify_vendor_ramdisk() {
+  ln -f init.recovery.gs101.rc init.recovery.slider.rc
+  ln -f init.recovery.gs101.rc init.recovery.whitefin.rc
+  ln -f init.recovery.gs101.rc init.recovery.oriole.rc
+  ln -f init.recovery.gs101.rc init.recovery.raven.rc
+}
+
+EXT_MODULES+="
+gs/google-modules/display/samsung
+gs/google-modules/wlan/bcmdhd4389
+gs/google-modules/gpu/mali_pixel
+gs/google-modules/gpu/mali_kbase
+gs/google-modules/lwis
+gs/google-modules/edgetpu/drivers/edgetpu
+gs/google-modules/bms
+gs/google-modules/amplifiers/drv2624
+gs/google-modules/amplifiers/cs40l25
+gs/google-modules/amplifiers/cs35l41
+gs/google-modules/amplifiers/audiometrics
+gs/google-modules/aoc
+gs/google-modules/aoc/alsa
+gs/google-modules/touch/common
+gs/google-modules/touch/fts/ftm5
+gs/google-modules/touch/sec
+gs/google-modules/power/reset
+gs/google-modules/bluetooth/broadcom
+gs/google-modules/nfc
+"
+#gs/google-modules/aoc/usb

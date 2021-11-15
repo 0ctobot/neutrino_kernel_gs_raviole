@@ -103,6 +103,7 @@ obj-$(CONFIG_SPI_RSPI)			+= spi-rspi.o
 obj-$(CONFIG_SPI_S3C24XX)		+= spi-s3c24xx-hw.o
 spi-s3c24xx-hw-y			:= spi-s3c24xx.o
 obj-$(CONFIG_SPI_S3C64XX)		+= spi-s3c64xx.o
+obj-$(CONFIG_SPI_S3C64XX_GS)		+= spi-s3c64xx-gs.o
 obj-$(CONFIG_SPI_SC18IS602)		+= spi-sc18is602.o
 obj-$(CONFIG_SPI_SH)			+= spi-sh.o
 obj-$(CONFIG_SPI_SH_HSPI)		+= spi-sh-hspi.o

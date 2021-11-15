@@ -23,3 +23,7 @@ obj-$(CONFIG_SCSI_UFSHCD_PLATFORM) += ufshcd-pltfrm.o
 obj-$(CONFIG_SCSI_UFS_HISI) += ufs-hisi.o
 obj-$(CONFIG_SCSI_UFS_MEDIATEK) += ufs-mediatek.o
 obj-$(CONFIG_SCSI_UFS_TI_J721E) += ti-j721e-ufs.o
+obj-$(CONFIG_SCSI_UFS_EXYNOS_GS) += ufs-exynos-gs.o
+ufs-exynos-gs-y += ufs-exynos.o ufs-exynos-dbg.o ufs-pixel.o
+ufs-exynos-gs-$(CONFIG_SOC_GS101) += gs101/ufs-cal-if.o
+ufs-exynos-gs-$(CONFIG_SCSI_UFS_CRYPTO) += ufs-pixel-crypto.o
