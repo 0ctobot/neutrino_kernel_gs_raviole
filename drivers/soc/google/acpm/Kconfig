@@ -10,6 +10,12 @@ menuconfig GS_ACPM
 
 if GS_ACPM
 
+config GS_ACPM_MODULE
+	bool "ACPM module support"
+	default n
+	help
+	  Enable ACPM_MODULE support
+
 config ACPM_MFD
 	bool "ACPM_MFD support"
 	default y
