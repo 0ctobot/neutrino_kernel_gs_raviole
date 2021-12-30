@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: GPL-2.0
+
+menuconfig QORVO_UWB
+	bool "Qorvo UWB stack for linux"
+
+config MCPS_FAKE
+	tristate "Stubbed MCPS802154 driver"
+
+config MCPS802154_TESTMODE
+	tristate "MCPS802154 testmode driver"
+
+config QCOM_SPI_LOWLATENCY
+	tristate "Qualcomm low-latency SPI driver"

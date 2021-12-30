@@ -18,3 +18,4 @@ obj-$(CONFIG_POWER_RESET_EXYNOS)	+= power/reset/
 obj-$(CONFIG_TOUCHSCREEN_COMMON)	+= touch/common/
 obj-$(CONFIG_TOUCHSCREEN_FTS)		+= touch/fts_touch/ftm5/
 obj-$(CONFIG_TOUCHSCREEN_SEC_TS)	+= touch/sec_touch/
+obj-$(CONFIG_QORVO_UWB)			+= uwb/kernel/
