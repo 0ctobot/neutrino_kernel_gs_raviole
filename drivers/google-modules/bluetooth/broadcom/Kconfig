@@ -1,0 +1,6 @@
+config NITROUS
+	tristate "Bluetooth power management driver"
+	default n
+	help
+		Say yes here to build the Nitrous Bluetooth power management
+		driver

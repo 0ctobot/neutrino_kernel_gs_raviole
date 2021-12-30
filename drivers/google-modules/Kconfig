@@ -12,5 +12,6 @@ source "drivers/google-modules/amplifiers/cs35l41/Kconfig"
 source "drivers/google-modules/amplifiers/cs40l25/Kconfig"
 source "drivers/google-modules/amplifiers/drv2624/Kconfig"
 source "drivers/google-modules/aoc/Kconfig"
+source "drivers/google-modules/bluetooth/broadcom/Kconfig"
 
 endif # GOOGLE_MODULES
