@@ -22,5 +22,6 @@ source "drivers/google-modules/gpu/mali_kbase/arbitration/Kconfig"
 source "drivers/google-modules/gpu/mali_kbase/platform/pixel/Kconfig"
 source "drivers/google-modules/gpu/mali_kbase/tests/Kconfig"
 source "drivers/google-modules/gpu/mali_pixel/Kconfig"
+source "drivers/google-modules/lwis/Kconfig"
 
 endif # GOOGLE_MODULES
