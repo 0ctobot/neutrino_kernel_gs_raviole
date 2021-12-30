@@ -26,5 +26,6 @@ source "drivers/google-modules/lwis/Kconfig"
 source "drivers/google-modules/nfc/Kconfig"
 source "drivers/google-modules/power/reset/Kconfig"
 source "drivers/google-modules/touch/common/Kconfig"
+source "drivers/google-modules/touch/fts_touch/ftm5/Kconfig"
 
 endif # GOOGLE_MODULES
