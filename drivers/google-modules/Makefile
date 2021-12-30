@@ -9,3 +9,4 @@ obj-$(CONFIG_NITROUS)			+= bluetooth/broadcom/
 obj-$(CONFIG_GOOGLE_BMS)		+= bms/
 obj-$(CONFIG_DRM_SAMSUNG)		+= display/samsung/
 obj-$(CONFIG_ABROLHOS)			+= edgetpu/drivers/edgetpu/
+obj-$(CONFIG_FPC_FINGERPRINT)		+= fingerprint/fpc/
