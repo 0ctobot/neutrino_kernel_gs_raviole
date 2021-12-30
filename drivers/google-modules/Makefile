@@ -8,3 +8,4 @@ obj-$(CONFIG_AOC_DRIVER)		+= aoc/ aoc/alsa/ aoc/usb/
 obj-$(CONFIG_NITROUS)			+= bluetooth/broadcom/
 obj-$(CONFIG_GOOGLE_BMS)		+= bms/
 obj-$(CONFIG_DRM_SAMSUNG)		+= display/samsung/
+obj-$(CONFIG_ABROLHOS)			+= edgetpu/drivers/edgetpu/
