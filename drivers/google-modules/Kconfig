@@ -25,5 +25,6 @@ source "drivers/google-modules/gpu/mali_pixel/Kconfig"
 source "drivers/google-modules/lwis/Kconfig"
 source "drivers/google-modules/nfc/Kconfig"
 source "drivers/google-modules/power/reset/Kconfig"
+source "drivers/google-modules/touch/common/Kconfig"
 
 endif # GOOGLE_MODULES

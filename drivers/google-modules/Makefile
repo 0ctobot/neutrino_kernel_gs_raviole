@@ -15,3 +15,4 @@ obj-$(CONFIG_MALI_MEMORY_GROUP_MANAGER)	+= gpu/mali_pixel/
 obj-$(CONFIG_LWIS)			+= lwis/
 obj-$(CONFIG_NFC_ST21NFC)		+= nfc/
 obj-$(CONFIG_POWER_RESET_EXYNOS)	+= power/reset/
+obj-$(CONFIG_TOUCHSCREEN_COMMON)	+= touch/common/
