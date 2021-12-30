@@ -7,3 +7,4 @@ obj-$(CONFIG_INPUT_DRV2624_HAPTICS)	+= amplifiers/drv2624/
 obj-$(CONFIG_AOC_DRIVER)		+= aoc/ aoc/alsa/ aoc/usb/
 obj-$(CONFIG_NITROUS)			+= bluetooth/broadcom/
 obj-$(CONFIG_GOOGLE_BMS)		+= bms/
+obj-$(CONFIG_DRM_SAMSUNG)		+= display/samsung/
