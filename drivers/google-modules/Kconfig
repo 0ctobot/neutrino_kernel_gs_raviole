@@ -1,0 +1,15 @@
+# SPDX-License-Identifier: GPL-2.0
+
+menuconfig GOOGLE_MODULES
+	bool "Support for compiling out-of-tree modules within the kernel tree"
+	help
+	  Say Y if you want to compile the drivers within this google-modules folder.
+
+if GOOGLE_MODULES
+
+source "drivers/google-modules/amplifiers/audiometrics/Kconfig"
+source "drivers/google-modules/amplifiers/cs35l41/Kconfig"
+source "drivers/google-modules/amplifiers/cs40l25/Kconfig"
+source "drivers/google-modules/amplifiers/drv2624/Kconfig"
+
+endif # GOOGLE_MODULES
