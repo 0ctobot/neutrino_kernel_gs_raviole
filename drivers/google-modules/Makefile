@@ -13,3 +13,4 @@ obj-$(CONFIG_FPC_FINGERPRINT)		+= fingerprint/fpc/
 obj-$(CONFIG_MALI_MIDGARD)		+= gpu/mali_kbase/
 obj-$(CONFIG_MALI_MEMORY_GROUP_MANAGER)	+= gpu/mali_pixel/
 obj-$(CONFIG_LWIS)			+= lwis/
+obj-$(CONFIG_NFC_ST21NFC)		+= nfc/
