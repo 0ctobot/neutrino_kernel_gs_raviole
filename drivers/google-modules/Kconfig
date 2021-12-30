@@ -17,5 +17,10 @@ source "drivers/google-modules/bms/Kconfig"
 source "drivers/google-modules/display/samsung/Kconfig"
 source "drivers/google-modules/edgetpu/drivers/edgetpu/Kconfig"
 source "drivers/google-modules/fingerprint/fpc/Kconfig"
+source "drivers/google-modules/gpu/mali_kbase/Kconfig"
+source "drivers/google-modules/gpu/mali_kbase/arbitration/Kconfig"
+source "drivers/google-modules/gpu/mali_kbase/platform/pixel/Kconfig"
+source "drivers/google-modules/gpu/mali_kbase/tests/Kconfig"
+source "drivers/google-modules/gpu/mali_pixel/Kconfig"
 
 endif # GOOGLE_MODULES
