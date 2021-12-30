@@ -30,5 +30,6 @@ source "drivers/google-modules/touch/fts_touch/ftm5/Kconfig"
 source "drivers/google-modules/touch/sec_touch/Kconfig"
 source "drivers/google-modules/uwb/kernel/Kconfig"
 source "drivers/google-modules/wlan/bcmdhd/bcm43752/Kconfig"
+source "drivers/google-modules/wlan/bcmdhd/bcm4389/Kconfig"
 
 endif # GOOGLE_MODULES

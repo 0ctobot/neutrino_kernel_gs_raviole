@@ -20,3 +20,4 @@ obj-$(CONFIG_TOUCHSCREEN_FTS)		+= touch/fts_touch/ftm5/
 obj-$(CONFIG_TOUCHSCREEN_SEC_TS)	+= touch/sec_touch/
 obj-$(CONFIG_QORVO_UWB)			+= uwb/kernel/
 obj-$(CONFIG_WLAN_BCM43752)		+= wlan/bcmdhd/bcm43752/
+obj-$(CONFIG_WLAN_BCM4389)		+= wlan/bcmdhd/bcm4389/
