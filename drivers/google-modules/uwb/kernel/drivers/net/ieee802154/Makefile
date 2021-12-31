@@ -3,9 +3,12 @@ obj-$(CONFIG_MCPS_FAKE) := mcps802154_fake.o
 ccflags-$(CONFIG_DW3000_DEBUG) := -DDEBUG -g
 
 dw3000-y := \
+		dw3000_nfcc_coex_core.o \
+		dw3000_nfcc_coex_buffer.o \
+		dw3000_nfcc_coex_msg.o \
+		dw3000_nfcc_coex_mcps.o \
+		dw3000_nfcc_coex_testmode.o \
 		dw3000_calib.o \
-		dw3000_ccc.o \
-		dw3000_ccc_mailbox.o \
 		dw3000_chip_c0.o \
 		dw3000_chip_d0.o \
 		dw3000_chip_e0.o \
@@ -13,10 +16,13 @@ dw3000-y := \
 		dw3000_mcps.o \
 		dw3000_spi.o \
 		dw3000_stm.o \
+		dw3000_debugfs.o \
 		dw3000_trc.o \
 		dw3000_txpower_adjustment.o
 
 dw3000-$(CONFIG_MCPS802154_TESTMODE) += dw3000_testmode.o
+
+dw3000-core-tests-$(CONFIG_KUNIT_DW3000_CORE_TEST) += dw3000_core_tests.o
 
 CFLAGS_dw3000_trc.o := -I$(src) -I$(srctree)/$(src)
 
