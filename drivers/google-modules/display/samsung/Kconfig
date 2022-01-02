@@ -56,6 +56,12 @@ config DRM_SAMSUNG_WB
 	  This means that both writeback and LCD display can be operated
 	  simultaneously.
 
+config DRM_SAMSUNG_TUI
+	bool "TUI on Exynos"
+	default DRM_SAMSUNG
+	help
+	  This enables support for Exynos Trusted User Interface for DRM.
+
 endif
 
 config DRM_PANEL_SAMSUNG_COMMON
