@@ -2,6 +2,8 @@
 # LWIS camera drivers
 #
 
+comment "LWIS"
+
 config LWIS
       bool "Drivers under LWIS implementation"
       default n

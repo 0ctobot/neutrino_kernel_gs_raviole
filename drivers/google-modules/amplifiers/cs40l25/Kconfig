@@ -12,6 +12,7 @@ config HAPTICS_CS40L2X
 config SND_SOC_CS40L2X
 	tristate "Cirrus Logic CS40L20/CS40L25/CS40L25A/CS40L25B PCM haptics PCM driver"
 	depends on HAPTICS_CS40L2X
+	default y if SOC_GS101
 	help
 	  Haptics PCM Driver with Integrated DSP and Waveform Memory
 	  with Closed Loop Algorithms and LRA Protection

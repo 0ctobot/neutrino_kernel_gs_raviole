@@ -27,6 +27,7 @@ config MALI_MEMORY_GROUP_MANAGER
 
 config MALI_PRIORITY_CONTROL_MANAGER
 	tristate "MALI_PRIORITY_CONTROL_MANAGER"
+	default y if SOC_GS101
 	help
 	  This option enables an implementation of a priority control manager
 	  for determining the target GPU scheduling priority of a process.

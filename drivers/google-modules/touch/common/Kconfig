@@ -1,3 +1,5 @@
+comment "Touch"
+
 menuconfig TOUCHSCREEN_COMMON
 	bool "Common Touchscreen Driver for Google Pixel"
 	help
@@ -6,6 +8,7 @@ menuconfig TOUCHSCREEN_COMMON
 config TOUCHSCREEN_HEATMAP
 	tristate "Heatmap support for touchscreen"
 	depends on (TOUCHSCREEN_FTS || TOUCHSCREEN_SEC_TS)
+	default y if SOC_GS101
 	select VIDEOBUF2_VMALLOC
 	help
 	  Do not explicitly select this option. The drivers that utilize
@@ -14,6 +17,7 @@ config TOUCHSCREEN_HEATMAP
 config TOUCHSCREEN_TBN
 	tristate "Touch Bus Negotiator for Google Pixel"
 	depends on (TOUCHSCREEN_FTS || TOUCHSCREEN_SEC_TS)
+	default y if SOC_GS101
 	help
 	  Say Y here if you have a Google Pixel device. This module enables
 	  support for kernel touch drivers to coordinate bus access with remote
@@ -28,6 +32,7 @@ config TOUCHSCREEN_TBN
 config TOUCHSCREEN_OFFLOAD
 	tristate "Touchscreen algorithm offload"
 	depends on (TOUCHSCREEN_FTS || TOUCHSCREEN_SEC_TS)
+	default y if SOC_GS101
 	help
 	  Say Y here to enable touchscreen algorithm offload. This module allows
 	  the touchscreen driver to feed heatmap data into a char device to be

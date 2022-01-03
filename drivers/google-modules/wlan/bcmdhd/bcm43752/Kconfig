@@ -19,11 +19,14 @@
 # <<Broadcom-WL-IPTag/Open:>>
 #
 
+comment "WLAN BCM43752"
+
 menuconfig WLAN_BCM43752
 	bool "Broadcom BCM43752 WLAN support"
 
 config BCMDHD
 	tristate "Broadcom FullMAC wireless cards support"
+	default y if SOC_GS101
 	help
 	  This module adds support for wireless adapters based on
 	  Broadcom FullMAC chipset.
@@ -38,6 +41,7 @@ config BCMDHD_SDIO
 config BCMDHD_PCIE
 	bool "PCIe bus interface support"
 	depends on BCMDHD && PCI && !BCMDHD_SDIO
+	default y if SOC_GS101
 
 config BCM4354
 	bool "BCM4354 support"
@@ -77,7 +81,7 @@ config BCM4375
 config BCM43752
     bool "BCM43752 support"
     depends on BCMDHD
-    default n
+    default y if SOC_GS101
 
 config BCM43014
 	bool "BCM43014 support"
@@ -92,26 +96,26 @@ config BCM43013
 config DHD_OF_SUPPORT
 	bool "Use in-drive platform device"
 	depends on BCMDHD
-	default n
+	default y if SOC_GS101
 
 config BCMDHD_FW_PATH
 	depends on BCMDHD
 	string "Firmware path"
-	default "/system/vendor/etc/wifi/fw_bcmdhd.bin"
+	default "/vendor/firmware/fw_bcmdhd.bin"
 	help
 	  Path to the firmware file.
 
 config BCMDHD_NVRAM_PATH
 	depends on BCMDHD
 	string "NVRAM path"
-	default "/system/vendor/etc/wifi/bcmdhd.cal"
+	default "/vendor/firmware/bcmdhd.cal"
 	help
 	  Path to the calibration file.
 
 config BCMDHD_CLM_PATH
 	depends on BCMDHD
 	string "CLM path"
-	default "/system/vendor/etc/wifi/bcmdhd_clm.blob"
+	default "/vendor/firmware/bcmdhd_clm.blob"
 	help
 	  Path to the clm file.
 
@@ -174,6 +178,7 @@ config BCMDHD_4389_NVRAM_PATH
 config BROADCOM_WIFI_RESERVED_MEM
 	bool "BROADCOM Reserved memory for wifi device"
 	depends on BCMDHD
+	default y if SOC_GS101
 	help
 	  This is a configuration for Broadcom WLAN driver.
 
@@ -188,14 +193,14 @@ config BCMDHD_WEXT
 config DHD_USE_STATIC_BUF
 	bool "Enable memory preallocation"
 	depends on BCMDHD
-	default n
+	default y if SOC_GS101
 	help
 	  Use memory preallocated in platform
 
 config DHD_USE_SCHED_SCAN
 	bool "Use CFG80211 sched scan"
 	depends on BCMDHD && CFG80211
-	default n
+	default y if SOC_GS101
 	help
 	  Use CFG80211 sched scan
 
@@ -244,6 +249,7 @@ config WL_NAN
 config BCMDHD_PREALLOC_PKTIDMAP
 	bool "BROADCOM PCIE specific memory reserved for PKTIDMAP"
 	depends on BROADCOM_WIFI_RESERVED_MEM && BCMDHD_PCIE
+	default y if SOC_GS101
 	help
 	  Preallocated memory support for PCIE interface in Broadcom
 	  WLAN driver.
@@ -251,12 +257,14 @@ config BCMDHD_PREALLOC_PKTIDMAP
 config BCMDHD_PREALLOC_MEMDUMP
 	bool "BROADCOM PCIE specific memory reserved for MEMDUMP"
 	depends on BROADCOM_WIFI_RESERVED_MEM
+	default y if SOC_GS101
 	help
 	  Preallocated memory support for dongle memory dump
 
 config BCMDHD_OOB_HOST_WAKE
         bool "Use the external WLAN_HOST_WAKE pin"
         depends on BCMDHD
+        default y if SOC_GS101
         help
           Use the external GPIO pin to wake up host
 

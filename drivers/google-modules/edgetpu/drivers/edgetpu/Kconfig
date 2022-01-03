@@ -1,4 +1,4 @@
-menu "EdgeTPU devices"
+comment "EdgeTPU"
 
 config EDGETPU_FRAMEWORK
 	tristate "EdgeTPU framework"
@@ -13,6 +13,7 @@ config EDGETPU_FRAMEWORK
 config ABROLHOS
 	tristate "Abrolhos ML accelerator direct host control driver"
 	depends on EDGETPU_FRAMEWORK
+	default y if SOC_GS101
 	select PM
 	help
 	  This driver supports the Abrolhos device.  Say Y if you want to
@@ -50,5 +51,3 @@ config EDGETPU_TELEMETRY_TRACE
 
 	  It's fine to have this enabled even the firmware doesn't send tracing
 	  events.
-
-endmenu

@@ -1,3 +1,5 @@
+comment "Bluetooth"
+
 config NITROUS
 	tristate "Bluetooth power management driver"
 	default n

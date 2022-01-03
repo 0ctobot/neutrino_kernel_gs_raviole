@@ -1,5 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
+comment "UWB"
+
 menuconfig QORVO_UWB
 	bool "Qorvo UWB stack for linux"
 
@@ -8,6 +10,7 @@ config MCPS_FAKE
 
 config MCPS802154_TESTMODE
 	tristate "MCPS802154 testmode driver"
+	default y if SOC_GS101
 
 config QCOM_SPI_LOWLATENCY
 	tristate "Qualcomm low-latency SPI driver"

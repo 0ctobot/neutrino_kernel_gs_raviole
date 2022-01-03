@@ -18,6 +18,8 @@
 #
 #
 
+comment "GPU"
+
 menuconfig MALI_MIDGARD
 	tristate "Mali Midgard series support"
 	select GPU_TRACEPOINTS if ANDROID
@@ -36,7 +38,7 @@ if MALI_MIDGARD
 config MALI_PLATFORM_NAME
 	depends on MALI_MIDGARD
 	string "Platform name"
-	default "devicetree"
+	default "pixel"
 	help
 	  Enter the name of the desired platform configuration directory to
 	  include in the build. 'platform/$(MALI_PLATFORM_NAME)/Makefile' must
@@ -45,10 +47,8 @@ config MALI_PLATFORM_NAME
 config MALI_REAL_HW
 	depends on MALI_MIDGARD
 	def_bool !MALI_NO_MALI
-
-menu "Platform specific options"
+	
 source "drivers/google-modules/gpu/mali_kbase/platform/Kconfig"
-endmenu
 
 config MALI_CSF_SUPPORT
 	bool "Enable Mali CSF based GPU support"
@@ -61,7 +61,7 @@ config MALI_DEVFREQ
 	bool "Enable devfreq support for Mali"
 	depends on MALI_MIDGARD && PM_DEVFREQ
 	select DEVFREQ_GOV_SIMPLE_ONDEMAND
-	default y
+	default n
 	help
 	  Support devfreq for Mali.
 
@@ -72,7 +72,7 @@ config MALI_DEVFREQ
 config MALI_MIDGARD_DVFS
 	bool "Enable legacy DVFS"
 	depends on MALI_MIDGARD && !MALI_DEVFREQ
-	default n
+	default y if SOC_GS101
 	help
 	  Choose this option to enable legacy DVFS in the Mali Midgard DDK.
 
@@ -142,7 +142,7 @@ config MALI_DMA_BUF_LEGACY_COMPAT
 menuconfig MALI_EXPERT
 	depends on MALI_MIDGARD
 	bool "Enable Expert Settings"
-	default n
+	default y if SOC_GS101
 	help
 	  Enabling this option and modifying the default settings may produce
 	  a driver with performance or other limitations.
@@ -183,9 +183,6 @@ config MALI_CORESTACK
 
 	  If unsure, say N.
 
-comment "Platform options"
-	depends on MALI_MIDGARD && MALI_EXPERT
-
 config MALI_NO_MALI
 	bool "Enable No Mali"
 	depends on MALI_MIDGARD && MALI_EXPERT
@@ -212,9 +209,6 @@ config MALI_GEM5_BUILD
 	help
 	  This option is to do a Mali GEM5 build.
 	  If unsure, say N.
-
-comment "Debug options"
-	depends on MALI_MIDGARD && MALI_EXPERT
 
 config MALI_DEBUG
 	bool "Enable debug build"
@@ -250,9 +244,6 @@ config MALI_SYSTEM_TRACE
 	  kbase event. This is typically used for debugging but has
 	  minimal overhead when not in use. Enable only if you know what
 	  you are doing.
-
-comment "Instrumentation options"
-	depends on MALI_MIDGARD && MALI_EXPERT
 
 choice
 	prompt "Select Performance counters set"
@@ -323,9 +314,6 @@ config MALI_JOB_DUMP
 	  job dumping. This is typically used for instrumentation but has
 	  minimal overhead when not in use. Enable only if you know what
 	  you are doing.
-
-comment "Workarounds"
-	depends on MALI_MIDGARD && MALI_EXPERT
 
 config MALI_PWRSOFT_765
 	bool "Enable workaround for PWRSOFT-765"

@@ -3,6 +3,8 @@
 # Near Field Communication (NFC) devices
 #
 
+comment "NFC"
+
 config NFC_ST21NFC
 	tristate "ST Microelectronics ST21NFC NFC Controller Driver"
 	depends on I2C
@@ -12,17 +14,20 @@ config NFC_ST21NFC
 config NFC_ST21NFC_NO_CRYSTAL
 	bool "ST Microelectronics ST21NFC NFC Controller Driver, no external crystal"
 	depends on NFC_ST21NFC
+	default y if SOC_GS101
 	help
 	 ST Microelectronics ST21NFC Near Field Communication controller support.
 
 config ESE_ST54
 	tristate "ST Microelectronics ST54 family ESE driver"
 	depends on SPI
+	default y if SOC_GS101
 	help
 	  ST Microelectronics ST54 ESE Near Field Communication controller support.
 
 config ESE_ST33
 	tristate "ST Microelectronics ST33 ESE driver"
 	depends on SPI
+	default y if SOC_GS101
 	help
 	  ST Microelectronics ST33 ESE Near Field Communication controller support.

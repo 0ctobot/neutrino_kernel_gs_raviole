@@ -1,3 +1,5 @@
+comment "BMS"
+
 menuconfig GOOGLE_BMS
 	bool "Google, LLC. Charging and Fuel Gauge support"
 	help
@@ -7,6 +9,7 @@ if GOOGLE_BMS
 
 config GOOGLE_BATTERY_CHARGING
 	tristate "Google Battery and Charging Control"
+	default y if SOC_GS101
 	select GOOGLE_CHARGER
 	select GOOGLE_BATTERY
 	help
@@ -34,18 +37,21 @@ config GOOGLE_BATTERY
 
 config GOOGLE_DUAL_BATT_GAUGE
         tristate "Google Dual Battery Gauge"
+	    default y if SOC_GS101
         help
           Say Y here to choose the Google Dual Battery Gauge.
           The driver handles 2 battery gauges and called by google battery.
 
 config GOOGLE_CPM
 	tristate "Google Charging Policy Manager"
+	default y if SOC_GS101
 	help
 	  Say Y here to enable the Charging Policy Manager.
 	  The driver manages multiple chargers (eg primary, secondary).
 
 config USB_OVERHEAT_MITIGATION
 	tristate "Google USB Overheat Mitigation"
+	default y if SOC_GS101
 	help
 	  Say Y here to enable Google USB overheat mitigation
 
@@ -58,6 +64,7 @@ config PMIC_VOTER_COMPAT
 
 config GOOGLE_BEE
 	tristate "Google Battery EEPROM"
+	default y if SOC_GS101
 	help
 	  Say Y here to enable the support for google battery EEPROM
 	  The EEPROM contains the battery type, lifetime data and other
@@ -68,6 +75,7 @@ endif	# GOOGLE_BMS
 config CHARGER_P9221
 	tristate "IDT P9221 wireless power receiver driver"
 	depends on I2C
+	default y if SOC_GS101
 	help
 	  This driver provides support for the IDT P9221 wireless
 	  power receiver.
@@ -75,51 +83,60 @@ config CHARGER_P9221
 config CHARGER_MAX77729
 	tristate "Maxim MAX77729 battery charger driver"
 	depends on I2C && OF
+	default y if SOC_GS101
 	help
 	  Say Y to enable support for the Maxim MAX77729 battery charger.
 
 config CHARGER_MAX77759
 	tristate "Maxim MAX77759 battery charger driver"
 	depends on I2C && OF
+	default y if SOC_GS101
 	help
 	  Say Y to enable support for the Maxim MAX77759 battery charger.
 
 config PMIC_MAX77729
 	tristate "Maxim MAX77729 PMIC driver"
 	depends on I2C && OF
+	default y if SOC_GS101
 	help
 	  Say Y to enable support for the Maxim MAX77729 PMIC.
 
 config UIC_MAX77729
 	tristate "Maxim MAX77729 TCPCI driver"
 	depends on I2C && OF
+	default y if SOC_GS101
 	help
 	  Say Y to enable support for the Maxim MAX77729 TCPCI.
 
 config PCA9468
 	tristate "NXP PCA9468 Direct charger"
 	depends on I2C && OF
+	default y if SOC_GS101
 	help
 	  Say Y to enable support for the PCA9648 direct charger.
 
 config MAX20339
 	tristate "Maxim MAX20339 input protection chip"
 	depends on I2C && OF
+	default y if SOC_GS101
 	help
 	  Say Y to enable support for Max20339 OVP and LS circuits.
 
 config MAXQ_MAX77759
 	tristate "Maxim MAX77759 MAXQ"
 	depends on I2C && PMIC_MAX77729
+	default y if SOC_GS101
 	help
 	  Say Y to enable support for MAX77759 MAXQ support.
 
 config MAX1720X_BATTERY
 	tristate "Maxim MAX1720X"
+	default y if SOC_GS101
 	help
 	  Say Y to enable support for MAX1720X battery.
 
 config MAX_M5
 	tristate "Maxim M5 MAX"
+	default y if SOC_GS101
 	help
 	  Say Y to enable support for M5 MAX.

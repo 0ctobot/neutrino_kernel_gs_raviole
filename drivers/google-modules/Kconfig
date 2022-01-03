@@ -1,7 +1,30 @@
 # SPDX-License-Identifier: GPL-2.0
 
+menu "Google Modules"
+
 menuconfig GOOGLE_MODULES
 	bool "Support for compiling out-of-tree modules within the kernel tree"
+	default y if SOC_GS101
+	select AUDIOMETRICS
+	select SND_SOC_CS35L41
+	select HAPTICS_CS40L2X
+	select INPUT_DRV2624_HAPTICS
+	select AOC_DRIVER
+	select NITROUS
+	select GOOGLE_BMS
+	select DRM_SAMSUNG
+	select EDGETPU_FRAMEWORK
+	select FPC_FINGERPRINT
+	select MALI_MIDGARD
+	select MALI_MEMORY_GROUP_MANAGER
+	select LWIS
+	select NFC_ST21NFC
+	select POWER_RESET_EXYNOS
+	select TOUCHSCREEN_COMMON
+	select TOUCHSCREEN_FTS
+	select TOUCHSCREEN_SEC_TS
+	select QORVO_UWB
+	select WLAN_BCM4389
 	help
 	  Say Y if you want to compile the drivers within this google-modules folder.
 
@@ -33,3 +56,5 @@ source "drivers/google-modules/wlan/bcmdhd/bcm4389/Kconfig"
 # source "drivers/google-modules/wlan/bcmdhd/bcm43752/Kconfig"
 
 endif # GOOGLE_MODULES
+
+endmenu

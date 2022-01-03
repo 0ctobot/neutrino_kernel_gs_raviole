@@ -1,3 +1,5 @@
+comment "Power"
+
 config POWER_RESET_EXYNOS
    tristate "Samsung Exynos power-off driver"
    depends on SOC_GS101
