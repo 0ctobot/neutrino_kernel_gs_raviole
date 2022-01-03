@@ -18,7 +18,7 @@ abrolhos-objs	:= abrolhos-core.o abrolhos-debug-dump.o \
 		   abrolhos-usage-stats.o abrolhos-wakelock.o \
 		   $(edgetpu-objs)
 
-KBUILD_OPTIONS += CONFIG_ABROLHOS=m
+KBUILD_OPTIONS += CONFIG_ABROLHOS=y
 
 modules modules_install clean:
 	$(MAKE) -C $(KERNEL_SRC) M=$(M) W=1 $(KBUILD_OPTIONS) $(@)

@@ -13,10 +13,10 @@ KERNEL_SRC ?= /lib/modules/$(shell uname -r)/build
 M ?= $(shell pwd)
 CUSTOM_INCLUDE ?= -I$(shell pwd)/include/
 
-KBUILD_OPTIONS += CONFIG_SND_SOC_CS35L45=m \
-		  CONFIG_SND_SOC_CS35L45_SPI=m \
-		  CONFIG_SND_SOC_CS35L45_I2C=m \
-		  CONFIG_SND_SOC_WM_ADSP=m \
+KBUILD_OPTIONS += CONFIG_SND_SOC_CS35L45=y \
+		  CONFIG_SND_SOC_CS35L45_SPI=y \
+		  CONFIG_SND_SOC_CS35L45_I2C=y \
+		  CONFIG_SND_SOC_WM_ADSP=y \
 		  ccflags-y='$(CUSTOM_INCLUDE)'
 
 modules modules_install clean:

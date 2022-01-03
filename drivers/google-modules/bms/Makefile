@@ -27,7 +27,7 @@ google-bms-objs += gbms_storage.o
 # TODO(166536889): enable bee only on the devices supporting it. This will
 # require a change in the API since right now storage call into eeprom that
 # calls back into storage.
-# KBUILD_OPTIONS += CONFIG_GOOGLE_BEE=m \
+# KBUILD_OPTIONS += CONFIG_GOOGLE_BEE=y \
 # obj-$(CONFIG_GOOGLE_BEE)	+= google_eeprom.o
 google-bms-objs += google_eeprom.o
 # TODO(163679860) remove pmic-voter usage from bms
@@ -122,7 +122,7 @@ KERNEL_SRC ?= /lib/modules/$(shell uname -r)/build
 M ?= $(shell pwd)
 
 
-KBUILD_OPTIONS += $(foreach m,$(GBMS_MODULES),CONFIG_$(m)=m )
+KBUILD_OPTIONS += $(foreach y,$(GBMS_MODULES),CONFIG_$(y)=y )
 
 modules:
 	$(MAKE) -C $(KERNEL_SRC) M=$(M) W=1 $(KBUILD_OPTIONS) \

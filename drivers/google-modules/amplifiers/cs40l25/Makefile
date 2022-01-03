@@ -13,8 +13,8 @@ M ?= $(shell pwd)
 CUSTOM_INCLUDE := -I$(srctree)/drivers/google-modules/amplifiers/cs40l25/include/
 ccflags-y += $(CUSTOM_INCLUDE)
 
-KBUILD_OPTIONS += CONFIG_HAPTICS_CS40L2X=m \
-		  CONFIG_SND_SOC_CS40L2X=m
+KBUILD_OPTIONS += CONFIG_HAPTICS_CS40L2X=y \
+		  CONFIG_SND_SOC_CS40L2X=y
 
 modules modules_install clean:
 	$(MAKE) -C $(KERNEL_SRC) M=$(M) $(KBUILD_OPTIONS) W=1 $(@)

@@ -14,10 +14,10 @@ M ?= $(shell pwd)
 CUSTOM_INCLUDE := -I$(srctree)/drivers/google-modules/amplifiers/cs35l41/include/
 ccflags-y += $(CUSTOM_INCLUDE)
 
-KBUILD_OPTIONS += CONFIG_SND_SOC_CS35L41=m \
-		  CONFIG_SND_SOC_CS35L41_SPI=m \
-		  CONFIG_SND_SOC_CS35L41_I2C=m \
-		  CONFIG_SND_SOC_WM_ADSP_GS=m
+KBUILD_OPTIONS += CONFIG_SND_SOC_CS35L41=y \
+		  CONFIG_SND_SOC_CS35L41_SPI=y \
+		  CONFIG_SND_SOC_CS35L41_I2C=y \
+		  CONFIG_SND_SOC_WM_ADSP_GS=y
 
 modules modules_install clean:
 	$(MAKE) -C $(KERNEL_SRC) M=$(M) $(KBUILD_OPTIONS) W=1 $(@)

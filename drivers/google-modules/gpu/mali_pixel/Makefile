@@ -19,10 +19,10 @@ CONFIG_MALI_PRIORITY_CONTROL_MANAGER ?= y
 ccflags-y += -I$(src)/../common/include
 
 mali_pixel-objs :=
-ifeq ($(CONFIG_MALI_MEMORY_GROUP_MANAGER),m)
+ifeq ($(CONFIG_MALI_MEMORY_GROUP_MANAGER),y)
 	mali_pixel-objs += memory_group_manager.o
 endif
-ifeq ($(CONFIG_MALI_PRIORITY_CONTROL_MANAGER),m)
+ifeq ($(CONFIG_MALI_PRIORITY_CONTROL_MANAGER),y)
 	mali_pixel-objs += priority_control_manager.o
 endif
 

@@ -6,7 +6,7 @@ ftm5-objs += \
 	fts_lib/ftsFrame.o fts_lib/ftsIO.o fts_lib/ftsTest.o fts_lib/ftsTime.o \
 	fts_lib/ftsTool.o fts_lib/ftsFlash.o fts_lib/ftsGesture.o
 
-KBUILD_OPTIONS	+= CONFIG_TOUCHSCREEN_FTS=m
+KBUILD_OPTIONS	+= CONFIG_TOUCHSCREEN_FTS=y
 EXTRA_CFLAGS	+= -DDYNAMIC_DEBUG_MODULE
 EXTRA_CFLAGS	+= -DCONFIG_TOUCHSCREEN_TBN
 EXTRA_CFLAGS	+= -DCONFIG_TOUCHSCREEN_HEATMAP

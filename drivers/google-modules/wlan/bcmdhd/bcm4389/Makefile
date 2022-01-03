@@ -35,7 +35,7 @@ DHDCFLAGS += -D__linux__ -D__KERNEL__
 # But for out-of-tree module, explicitly define them here and add
 # them as cflags
 ifeq ($(CONFIG_BCMDHD),)
-CONFIG_BCMDHD=m
+CONFIG_BCMDHD=y
 CONFIG_BCMDHD_PCIE=y
 CONFIG_BCM4389=y
 CONFIG_DHD_OF_SUPPORT=y

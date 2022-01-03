@@ -9,8 +9,8 @@ obj-$(CONFIG_ESE_ST54)		+= ese/
 KERNEL_SRC ?= /lib/modules/$(shell uname -r)/build
 M ?= $(shell pwd)
 
-KBUILD_OPTIONS += CONFIG_NFC_ST21NFC=m CONFIG_NFC_ST21NFC_NO_CRYSTAL=y \
-		  CONFIG_ESE_ST54=m CONFIG_ESE_ST33=m
+KBUILD_OPTIONS += CONFIG_NFC_ST21NFC=y CONFIG_NFC_ST21NFC_NO_CRYSTAL=y \
+		  CONFIG_ESE_ST54=y CONFIG_ESE_ST33=y
 
 ccflags-y := -I$(srctree)/drivers/google-modules/nfc
 

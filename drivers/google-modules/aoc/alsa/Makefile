@@ -11,7 +11,7 @@ aoc_alsa_dev-objs := aoc_alsa_card.o
 
 KERNEL_SRC ?= /lib/modules/$(shell uname -r)/build
 M ?= $(shell pwd)
-KBUILD_OPTIONS += CONFIG_AOC_DRIVER=m
+KBUILD_OPTIONS += CONFIG_AOC_DRIVER=y
 EXTRA_CFLAGS=-I$(srctree)/drivers/google-modules/aoc_ipc -I$(srctree)/drivers/google-modules/aoc
 
 modules modules_install clean:

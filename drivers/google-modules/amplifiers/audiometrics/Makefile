@@ -4,7 +4,7 @@ KERNEL_SRC ?= /lib/modules/$(shell uname -r)/build
 M ?= $(shell pwd)
 CUSTOM_INCLUDE ?= -I$(shell pwd)/include/
 
-KBUILD_OPTIONS += CONFIG_AUDIOMETRICS=m
+KBUILD_OPTIONS += CONFIG_AUDIOMETRICS=y
 
 headers-y += uapi/audiometrics_api.h
 

@@ -28,7 +28,7 @@ config BCMDHD
 	  This module adds support for wireless adapters based on
 	  Broadcom FullMAC chipset.
 
-	  If you choose to build a module, it'll be called dhd. Say M if
+	  If you choose to build a module, it'll be called dhd. Say Y if
 	  unsure.
 
 config BCMDHD_SDIO
