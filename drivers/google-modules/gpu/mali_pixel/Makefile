@@ -16,12 +16,7 @@ src:=$(if $(patsubst /%,,$(src)),$(srctree)/$(src),$(src))
 CONFIG_MALI_MEMORY_GROUP_MANAGER ?= y
 CONFIG_MALI_PRIORITY_CONTROL_MANAGER ?= y
 
-DEFINES += \
-	-DCONFIG_MALI_MEMORY_GROUP_MANAGER=$(CONFIG_MALI_MEMORY_GROUP_MANAGER) \
-	-DCONFIG_MALI_PRIORITY_CONTROL_MANAGER=$(CONFIG_MALI_PRIORITY_CONTROL_MANAGER)
-
-# Use our defines when compiling, and include mali platform module headers
-ccflags-y += $(DEFINES) -I$(src)/../common/include
+ccflags-y += -I$(src)/../common/include
 
 mali_pixel-objs :=
 ifeq ($(CONFIG_MALI_MEMORY_GROUP_MANAGER),m)
