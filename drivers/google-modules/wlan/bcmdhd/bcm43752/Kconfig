@@ -115,6 +115,62 @@ config BCMDHD_CLM_PATH
 	help
 	  Path to the clm file.
 
+config BCMDHD_4375b0_FW_PATH
+	depends on BCMDHD
+	string "BCMDHD 4375b0 firmware path"
+	default "/vendor/firmware/fw_bcm4375b0.bin"
+	help
+	  Path to the BCMDHD 4375b0 firmware file.
+
+config BCMDHD_4375b0_NVRAM_PATH
+	depends on BCMDHD
+	string "BCMDHD 4375b0 NVRAM path"
+	default "/vendor/etc/wifi/bcmdhd_4375.cal"
+	help
+	  Path to the BCMDHD 4375b0 calibration file.
+
+config BCMDHD_4375b1_FW_PATH
+	depends on BCMDHD
+	string "BCMDHD 4375b1 firmware path"
+	default "/vendor/firmware/fw_bcm4375b1.bin"
+	help
+	  Path to the BCMDHD 4375b1 firmware file.
+
+config BCMDHD_4375b1_NVRAM_PATH
+	depends on BCMDHD
+	string "BCMDHD 4375b1 NVRAM path"
+	default "/vendor/etc/wifi/bcmdhd_4375.cal"
+	help
+	  Path to the BCMDHD 4375b1 calibration file.
+
+config BCMDHD_4385_FW_PATH
+	depends on BCMDHD
+	string "BCMDHD 4385 firmware path"
+	default "/vendor/firmware/fw_bcm4385.bin"
+	help
+	  Path to the BCMDHD 4385 firmware file.
+
+config BCMDHD_4385_NVRAM_PATH
+	depends on BCMDHD
+	string "BCMDHD 4385 NVRAM path"
+	default "vendor/etc/wifi/bcmdhd_4385.cal"
+	help
+	  Path to the BCMDHD 4385 calibration file.
+
+config BCMDHD_4389_FW_PATH
+	depends on BCMDHD
+	string "BCMDHD 4389 firmware path"
+	default "/vendor/firmware/fw_bcm4389.bin"
+	help
+	  Path to the BCMDHD 4389 firmware file.
+
+config BCMDHD_4389_NVRAM_PATH
+	depends on BCMDHD
+	string "BCMDHD 4389 NVRAM path"
+	default "/vendor/etc/wifi/bcmdhd_4389.cal"
+	help
+	  Path to the BCMDHD 4389 calibration file.
+
 config BROADCOM_WIFI_RESERVED_MEM
 	bool "BROADCOM Reserved memory for wifi device"
 	depends on BCMDHD
