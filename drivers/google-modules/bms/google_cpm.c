@@ -223,7 +223,7 @@ struct gcpm_drv  {
 
 /* Logging ----------------------------------------------------------------- */
 
-int debug_printk_prlog = LOGLEVEL_INFO;
+static int debug_printk_prlog = LOGLEVEL_INFO;
 
 /*
  * A \n in a logbuffer string has a special meaning and is usually not included
