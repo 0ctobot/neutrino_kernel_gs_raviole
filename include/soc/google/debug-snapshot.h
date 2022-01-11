@@ -147,6 +147,8 @@ static inline void dbg_snapshot_spin_func(void)
 #define dbg_snapshot_qd_dump_stack(a)		do { } while (0)
 
 #define dbg_snapshot_get_sjtag_status()		do { } while (0)
+#define dbg_snapshot_get_reboot_status()	(0)
+#define dbg_snapshot_get_panic_status()		(0)
 #define dbg_snapshot_panic_handler_safe()	do { } while (0)
 #define dbg_snapshot_ecc_dump()			do { } while (0)
 #define dbg_snapshot_register_wdt_ops(a, b, c)	do { } while (0)
