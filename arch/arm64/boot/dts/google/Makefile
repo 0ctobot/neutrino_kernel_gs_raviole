@@ -1,5 +1,7 @@
 dtb-$(CONFIG_SOC_GS101) += \
-	gs101-b0.dtb
+	gs101-b0.dtb \
+	gs101-oriole.dtb \
+	gs101-raven.dtb
 
 soc-dtbo-$(CONFIG_SOC_GS101) += \
 	gs101-dpm-user.dtbo
